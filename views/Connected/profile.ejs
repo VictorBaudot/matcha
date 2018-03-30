@@ -1,0 +1,128 @@
+<% include header %>
+<p>
+    <strong>id</strong>: <%= user.id %><br>
+    <strong>login</strong>: <%= user.login %><br>
+    <strong>password</strong>: <%= user.password %>
+</p>
+<form onkeypress="return event.keyCode != 13;" action="/profile" method="post" class="ui equal width form segment">
+    <div class="fields">
+        <div class="field">
+            <label>Pseudo</label>
+            <input type="text" placeholder="Pseudo" name="login">
+        </div>
+        <div class="field">
+            <label>Prenom</label>
+            <input type="text" placeholder="Prenom" name="prenom">
+        </div>
+        <div class="field">
+            <label>Nom</label>
+            <input type="text" placeholder="Nom" name="nom">
+        </div>
+    </div>
+
+    <div class="fields">
+        <div class="field">
+            <label>Age</label>
+            <input type="number" min="12" max="30" value="12" name="age">
+        </div>
+        <div class="field">
+            <label>Localisation</label>
+            <select class="ui fluid search dropdown">
+                <option value="">Lieu</option>
+                <option value="AF">Afghanistan</option>
+                <option value="AX">Åland Islands</option>
+                <option value="AL">Albania</option>
+                <option value="DZ">Algeria</option>
+                <option value="AS">American Samoa</option>
+                <option value="AD">Andorra</option>
+                <option value="ZW">Zimbabwe</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="fields">
+        <div class="field">
+            <label>Genre</label>
+            <div class="ui selection dropdown">
+                <input type="hidden" name="genre">
+                <i class="dropdown icon"></i>
+                <div class="default text">Genre</div>
+                <div class="menu">
+                    <div class="item" data-value="1">Male</div>
+                    <div class="item" data-value="0">Femelle</div>
+                </div>
+            </div>
+        </div>
+        <div class="field">
+            <label>Orientation sexuelle</label>
+            <div class="ui selection dropdown">
+                <input type="hidden" name="orientation">
+                <i class="dropdown icon"></i>
+                <div class="default text">Orientation</div>
+                <div class="menu">
+                    <div class="item" data-value="2">Bi</div>
+                    <div class="item" data-value="1">Hetero</div>
+                    <div class="item" data-value="0">Homo</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="field">
+        <label>Bio</label>
+        <textarea rows="2" placeholder="Blabla..." name="bio"></textarea>
+    </div>
+
+    <div class="field">
+        <div class="ui fluid multiple search selection dropdown">
+            <input name="tags" type="hidden">
+            <i class="dropdown icon"></i>
+            <div class="default text">Interets</div>
+            <div class="menu">
+                <div class="item" data-value="angular">Angular</div>
+                <div class="item" data-value="css">CSS</div>
+                <div class="item" data-value="design">Graphic Design</div>
+                <div class="item" data-value="ember">Ember</div>
+                <div class="item" data-value="html">HTML</div>
+                <div class="item" data-value="ia">Information Architecture</div>
+                <div class="item" data-value="javascript">Javascript</div>
+                <div class="item" data-value="mech">Mechanical Engineering</div>
+                <div class="item" data-value="meteor">Meteor</div>
+                <div class="item" data-value="node">NodeJS</div>
+                <div class="item" data-value="plumbing">Plumbing</div>
+                <div class="item" data-value="python">Python</div>
+                <div class="item" data-value="rails">Rails</div>
+                <div class="item" data-value="react">React</div>
+                <div class="item" data-value="repair">Kitchen Repair</div>
+                <div class="item" data-value="ruby">Ruby</div>
+                <div class="item" data-value="ui">UI Design</div>
+                <div class="item" data-value="ux">User Experience</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="field">
+        <label>E-mail</label>
+        <input type="email" placeholder="batman@arkham.city" name="email">
+    </div>
+
+    <div class="fields">
+        <div class="field">
+            <label>Mot de passe</label>
+            <input type="text" placeholder="Mot de passe" name="pwd">
+        </div>
+        <div class="field">
+            <label>Confirmation</label>
+            <input type="password" placeholder="Mot de passe" name="confirm">
+        </div>
+    </div>
+    
+    <button type="submit" class="ui blue submit button" value="submit">
+        S'inscrire
+    </button>
+</form>
+<script>
+        $('.ui.dropdown').dropdown();
+        $('.ui.multiple.search.dropdown').dropdown({allowAdditions: true});
+    </script>
+<% include footer %>

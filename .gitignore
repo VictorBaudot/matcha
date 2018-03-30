@@ -1,1 +1,5 @@
-node_modules
+# node
+
+public/semantic
+node_modules/
+package-lock.json

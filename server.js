@@ -5,7 +5,6 @@ const cookieParser = require('cookie-parser')
 const session = require('express-session')
 const bodyParser = require('body-parser')
 const passport = require('passport')
-const connectFlash = require('connect-flash')
 
 const port = 6969;
 const hostname = '127.0.0.1'; 
@@ -28,7 +27,6 @@ app.use(session({
 }))
 app.use(passport.initialize())
 app.use(passport.session())
-app.use(connectFlash())
 app.use(require('./middlewares/flash'))
 
 // Routes

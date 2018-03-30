@@ -39,19 +39,39 @@ class User {
     }
 
     static findByLogin (login, callback) {
-        console.log("findOne")
         connection.query('SELECT * FROM users WHERE login = ?', [login], (err, rows) => {
-            callback(err, rows)
+            if (err) throw err
+            callback(rows[0])
+        })
+    }
+
+    static update (id, column, value, callback) {
+        let query = "UPDATE users SET " + column + " = ? WHERE id = ?";
+        connection.query(query, [value, id], (err) => {
+            if (err) throw err
+            callback()
         })
     }
 
     static findById (id, callback) {
-        console.log("findById")
         connection.query('SELECT * FROM users WHERE id = ?', [id], (err, rows) => {
             callback(err, rows)
         })
     }
 
 }
+
+let update = (table, idcol) => (id, o, callback) => {
+    let keys = Object.keys(o);
+    let cols = keys.map(k => `${k} = ?`).join(', ');
+    let query = `UPDATE ${table} SET ${cols} WHERE ${idcol} = ${id}`;
+    let values = keys.map(k => o[k]).concat(id);
+    connection.query(query, values, (err) => {
+      if (err) throw err;
+      callback();
+    });
+  };
+
+User.update = update('users', 'id');
 
 module.exports = User

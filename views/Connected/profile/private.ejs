@@ -1,10 +1,4 @@
-<% include header %>
-<p>
-    <strong>id</strong>: <%= user.id %><br>
-    <strong>login</strong>: <%= user.login %><br>
-    <strong>password</strong>: <%= user.password %>
-</p>
-<form onkeypress="return event.keyCode != 13;" action="/profile" method="post" class="ui equal width form segment">
+<form onkeypress="return event.keyCode != 13;" action="/modify_profile" method="post" class="ui equal width form">
     <div class="fields">
         <div class="field">
             <label>Pseudo</label>
@@ -23,7 +17,7 @@
     <div class="fields">
         <div class="field">
             <label>Age</label>
-            <input type="number" min="12" max="30" value="12" name="age">
+            <input type="number" placeholder="24" min="16" max="30" value="" name="age">
         </div>
         <div class="field">
             <label>Localisation</label>
@@ -108,8 +102,8 @@
 
     <div class="fields">
         <div class="field">
-            <label>Mot de passe</label>
-            <input type="text" placeholder="Mot de passe" name="pwd">
+            <label>Nouveau mot de passe</label>
+            <input type="text" placeholder="Mot de passe" name="password">
         </div>
         <div class="field">
             <label>Confirmation</label>
@@ -118,11 +112,10 @@
     </div>
     
     <button type="submit" class="ui blue submit button" value="submit">
-        S'inscrire
+        Modifier
     </button>
 </form>
 <script>
         $('.ui.dropdown').dropdown();
         $('.ui.multiple.search.dropdown').dropdown({allowAdditions: true});
-    </script>
-<% include footer %>
+</script>

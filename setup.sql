@@ -6,21 +6,20 @@ CREATE TABLE IF NOT EXISTS users
 	nom VARCHAR(255) NOT NULL default '',
 	email VARCHAR(320) NOT NULL default '',
 	password TEXT NOT NULL,
-	creation DATETIME,
-	active BINARY(1) NOT NULL default '0',
-	age INT UNSIGNED NOT NULL,
-	genre enum('homme', 'femme') NOT NULL,
-	orientation enum('hetero', 'homo', 'bi') NOT NULL,
-	bio TEXT NOT NULL default '',
+	creation DATETIME NULL,
+	active BINARY(1) NOT NULL default 0,
+	age INT UNSIGNED NULL,
+	genre enum('homme', 'femme') NOT NULL default 'homme',
+	orientation enum('hetero', 'homo', 'bi') NOT NULL default 'bi',
+	bio TEXT NULL,
 	interests BLOB NULL,
 	profile_pic TEXT NULL,
 	pics BLOB NULL,
-	pop_score FLOAT default 0,
-	localisation VARCHAR(255) NOT NULL default '',
+	pop_score INT UNSIGNED NOT NULL default 0,
+	localisation VARCHAR(255) NULL,
 	reported BLOB NULL,
 	blocked BLOB NULL,
-	activity DATETIME,
-	rights enum('user', 'admin') NOT NULL default 'user'
+	activity DATETIME
 );
 
 CREATE TABLE IF NOT EXISTS confirm (

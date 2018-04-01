@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser')
 const session = require('express-session')
 const bodyParser = require('body-parser')
 const passport = require('passport')
+const async = require('async')
 
 const port = 6969;
 const hostname = '127.0.0.1'; 
@@ -30,7 +31,7 @@ app.use(passport.session())
 app.use(require('./middlewares/flash'))
 
 // Routes
-require('./app/routes.js')(app, passport)
+require('./app/routes.js')(app, passport, async)
 
 app.listen(port, hostname, () => {
     console.log(`Server running at http://${hostname}:${port}/`);

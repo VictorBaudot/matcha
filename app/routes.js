@@ -1,4 +1,4 @@
-module.exports = (app, passport) => {
+module.exports = (app, passport, async) => {
 
     app.get('/', (req, res) => {
         if (req.isAuthenticated()) res.render("Connected/index.ejs")
@@ -33,7 +33,8 @@ module.exports = (app, passport) => {
     app.post('/signup', passport.authenticate('local-signup', {
 		successRedirect : '/', // redirect to the secure profile section
 		failureRedirect : '/', // redirect back to the signup page if there is an error
-		failureFlash : true // allow flash messages
+        failureFlash : true, // allow flash messages
+        session: false // prevent auto-login
 	}));
 
     // =====================================
@@ -50,38 +51,66 @@ module.exports = (app, passport) => {
     });
 
     app.post('/modify_profile', isLoggedIn, (req, res) => {
-        console.log(req.body)
-        console.log(req.user.id + " --- " + req.user.login)
-
-        let {login, prenom, nom, email, age, password, confirm, genre, orientation, bio, interests, localisation} = req.body
-
+   //     console.log(req.body)
+   //     console.log(req.user.id + " --- " + req.user.login)
+   
+        const Check = require('./models/check')
+        var params = {login, prenom, nom, email, age, password, confirm, genre, orientation, bio, interests, localisation} = req.body
+        var count = 0
+        var o = {}
         let id = req.user.id
-        let o = {}
-        let valid = true
+        var valid = true
+        var total = 0
 
-        let Check = require('./models/check')
+        console.log(JSON.stringify(params, null, 4));
 
-        if (login && (valid = Check.login(login))) o.login = login
-        if (prenom && (valid = Check.nom(prenom))) o.prenom = prenom
-        if (nom && (valid = Check.nom(nom))) o.nom = nom
-        if (email && (valid = Check.email(email))) o.email = email
-        if (age && (valid = Check.age(age))) o.age = age
-        if (password && (valid = Check.password(password, confirm))) o.password = password
-        if (genre && (valid = Check.genre(genre))) o.genre = genre
-        if (orientation && (valid = Check.orientation(orientation))) o.orientation = orientation
-        if (bio && (valid = Check.bio(bio))) o.bio = bio
-        if (interests && (valid = Check.interests(interests))) o.interests = interests
-        if (localisation && (valid = Check.localisation(localisation))) o.localisation = localisation
-        
-       console.log("Valide? "+valid)
+        for (var i in params) {
+            if (params[i] && i !== 'confirm') total++
+        }
+        console.log(total)
+        if (total === 0) {
+            req.flashAdd('tabError', 'Aucune modification enregistree.');
+            res.redirect('/profile')
+        }
+        function modify () {
+            console.log(JSON.stringify(o, null, 4));
+            if (Object.keys(o).length !== 0){
+                let User = require('./models/user')
+                User.update(id, o, () => {
+                    req.flashAdd('tabSuccess', 'Modifications faites avec succes');
+                    res.redirect('/profile')
+                })
+            } else res.redirect('/profile')
+        }
 
-        if (login || prenom || nom || email || age || password || genre || orientation || bio || interests || localisation){
-            let User = require('./models/user')
-            User.update(id, o, () => {
-                req.flashAdd('tabSuccess', 'Modifications faites avec succes');
-                res.redirect('/profile')
+        function checkField (i) {
+            if (i === "password") {
+                Check[i](params[i], params["confirm"], req, (check) => {
+                    if (check === true) o[i] = params[i]
+                    count++
+                    if (count === total) {
+                        console.log(count+" === "+total)
+                        modify()
+                    }
+                })
+            }
+            else Check[i](params[i], req, (check) => {
+                if (check === true) o[i] = params[i]
+                count++
+                if (count === total) {
+                    console.log(count+" === "+total)
+                    modify()
+                }
             })
-        } else res.redirect('/profile')
+        }
+
+        for (let i in params) {
+            if (params[i] && i !== 'confirm') {
+                console.log(i+" - "+params[i])
+                checkField(i)
+            }
+        }
+
     });
 
     // =====================================
@@ -119,4 +148,8 @@ function checkCredentials(req, res, next) {
 
     req.flashAdd('tabError', 'Login/Password invalides');
     res.redirect('/');
+}
+
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
 }

@@ -15,8 +15,8 @@ CREATE TABLE IF NOT EXISTS \`users\` ( \
 	creation DATETIME NULL, \
 	active BINARY(1) NOT NULL default 0, \
 	age INT UNSIGNED NULL, \
-	genre enum('homme', 'femme') NOT NULL default 'homme', \
-	orientation enum('hetero', 'homo', 'bi') NOT NULL default 'bi', \
+	genre enum('Homme', 'Femme') NOT NULL default 'Homme', \
+	orientation enum('Hetero', 'Homo', 'Bi') NOT NULL default 'Bi', \
 	bio TEXT NULL, \
 	interests BLOB NULL, \
 	localisation VARCHAR(255) NULL, \

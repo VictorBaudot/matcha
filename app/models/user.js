@@ -45,6 +45,13 @@ class User {
         })
     }
 
+    static findByEmail (email, callback) {
+        connection.query('SELECT * FROM users WHERE email = ?', [email], (err, rows) => {
+            if (err) throw err
+            callback(rows)
+        })
+    }
+
     static update (id, column, value, callback) {
         let query = "UPDATE users SET " + column + " = ? WHERE id = ?";
         connection.query(query, [value, id], (err) => {
@@ -65,10 +72,13 @@ let update = (table, idcol) => (id, o, callback) => {
     let keys = Object.keys(o);
     let cols = keys.map(k => `${k} = ?`).join(', ');
     let query = `UPDATE ${table} SET ${cols} WHERE ${idcol} = ${id}`;
+    console.log(query)
     let values = keys.map(k => o[k]).concat(id);
+    console.log(values)
+    
     connection.query(query, values, (err) => {
-      if (err) throw err;
-      callback();
+        if (err) throw err;
+        callback();
     });
   };
 

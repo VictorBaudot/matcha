@@ -18,7 +18,6 @@ module.exports = (app, passport, async) => {
         failureRedirect: '/', // redirect back to the signup page if there is an error
         failureFlash: true, // allow flash messages
     }), ({ body, session }, res) => {
-        console.log('hello');
 
         if (body.remember) {
             session.cookie.maxAge = 1000 * 60 * 3;
@@ -72,7 +71,7 @@ module.exports = (app, passport, async) => {
 
         connection.query("SELECT interest FROM users_tags WHERE user_id = ?", user.id, (err, rows) => {
             if (err) throw err;
-            console.log(JSON.stringify(rows, null, 4));
+     //       console.log(JSON.stringify(rows, null, 4));
             let tab = []
             rows.forEach(row => {
                 tab.push(row.interest)
@@ -96,12 +95,12 @@ module.exports = (app, passport, async) => {
         var valid = true
         var total = 0
 
-        console.log(JSON.stringify(params, null, 4));
+ //       console.log(JSON.stringify(params, null, 4));
 
         for (let i in params) {
             if (params[i] && i !== 'confirm') total++
         }
-        console.log(total)
+  //      console.log(total)
 
         if (total === 0) {
             req.flashAdd('tabError', 'Aucune modification enregistree.');
@@ -109,12 +108,12 @@ module.exports = (app, passport, async) => {
         }
 
         function modify () {
-            console.log(JSON.stringify(o, null, 4));
+    //        console.log(JSON.stringify(o, null, 4));
             if (Object.keys(o).length !== 0){
                 let User = require('./models/user')
                 User.update(id, o, () => {
-                    console.log("Callback Update")
-                    console.log(JSON.stringify(o, null, 4));
+ //                   console.log("Callback Update")
+  //                  console.log(JSON.stringify(o, null, 4));
                     for (let i in o) {
                         if (o[i] && i !== 'confirm') req.flashAdd('tabSuccess', i+' -> '+o[i]);
                     }
@@ -130,7 +129,6 @@ module.exports = (app, passport, async) => {
                     if (check === true) o[i] = bcrypt.hashSync(params[i], bcrypt.genSaltSync(9))
                     count++
                     if (count === total) {
-                        console.log(count+" === "+total)
                         modify()
                     }
                 })
@@ -139,7 +137,6 @@ module.exports = (app, passport, async) => {
                     if (check === true) o[i] = params[i]
                     count++
                     if (count === total) {
-                        console.log(count+" === "+total)
                         modify()
                     }
                 })
@@ -147,7 +144,6 @@ module.exports = (app, passport, async) => {
                 if (check === true) o[i] = params[i]
                 count++
                 if (count === total) {
-                    console.log(count+" === "+total)
                     modify()
                 }
             })
@@ -155,7 +151,7 @@ module.exports = (app, passport, async) => {
 
         for (let i in params) {
             if (params[i] && i !== 'confirm') {
-                console.log(i+" - "+params[i])
+            //    console.log(i+" - "+params[i])
                 checkField(i)
             }
         }

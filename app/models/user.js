@@ -69,9 +69,9 @@ class User {
 }
 
 let update = (table, idcol) => (id, o, callback) => {
-    console.log("\nIn update function -------------------")
+//    console.log("\nIn update function -------------------")
     let p = JSON.parse(JSON.stringify(o));
-    console.log("p: "+JSON.stringify(p, null, 4));
+ //   console.log("p: "+JSON.stringify(p, null, 4));
 
     if (p.interests) {
         let tags = p.interests.split(',')
@@ -96,15 +96,15 @@ let update = (table, idcol) => (id, o, callback) => {
 
     let keys = Object.keys(p);
 
-    console.log(keys)
+ //   console.log(keys)
     let cols = keys.map(k => `${k} = ?`).join(', ');
-    console.log(cols)
+ //   console.log(cols)
 
     if (!cols) return callback()
     let query = `UPDATE ${table} SET ${cols} WHERE ${idcol} = ${id}`;
-    console.log(query)
+  //  console.log(query)
     let values = keys.map(k => p[k]).concat(id);
-    console.log(values)
+   // console.log(values)
     
     connection.query(query, values, (err) => {
         if (err) throw err;

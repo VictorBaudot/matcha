@@ -21,18 +21,19 @@
   <a href="/logout" class="header item">Deconnexion</a>
 </div>
 <div class="ui main container">
-    <% if (locals.flash && locals.flash.tabError) { 
-        console.log(locals.flash.tabError)
-        for (id in locals.flash.tabError) { %>
-      <div class="ui negative message">
-          <%= locals.flash.tabError[id] %>
-      </div>
-      <% }
-    } else if (locals.flash && locals.flash.tabSuccess) { 
-      console.log(locals.flash.tabSuccess)
-      for (id in locals.flash.tabSuccess) { %>
-    <div class="ui positive message">
-        <%= locals.flash.tabSuccess[id] %>
-    </div>
-    <% }
-    } %>
+    <%  if (locals.flash && locals.flash.tabSuccess) { 
+          console.log(locals.flash.tabSuccess)
+          for (id in locals.flash.tabSuccess) { %>
+            <div class="ui positive message">
+                Success: <%= locals.flash.tabSuccess[id] %>
+            </div>
+        <% }
+        }
+        if (locals.flash && locals.flash.tabError) { 
+          console.log(locals.flash.tabError)
+          for (id in locals.flash.tabError) { %>
+            <div class="ui negative message">
+                Echec: <%= locals.flash.tabError[id] %>
+            </div>
+          <% }
+        }%>

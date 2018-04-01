@@ -118,6 +118,8 @@ var Check = {
 
     interests: interests = (interests, req, cb) => {
         let rep = true
+        console.log(interests)
+        console.log(JSON.stringify(interests, null, 4));
         cb(rep)
     },
 

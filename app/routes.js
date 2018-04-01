@@ -1,3 +1,4 @@
+const connection = require('../config/db')
 module.exports = (app, passport, async) => {
 
     app.get('/', (req, res) => {
@@ -44,10 +45,43 @@ module.exports = (app, passport, async) => {
     // we will use route middleware to verify this (the isLoggedIn function)
     app.get('/profile', isLoggedIn, ({ user }, res) => {
         let login = user.login
+        let infos_user = {}
+        let tags, interests
         let User = require('./models/user')
-        User.findByLogin(login, (infos_user) => {
-            res.render('Connected/profile/profile.ejs', {infos_user, user})
+        let count = 0
+        let total = 3
+
+        function displayProfile() {
+            res.render('Connected/profile/profile.ejs', {infos_user, tags, interests, user})
+        }
+
+        User.findByLogin(login, (infos) => {
+            infos_user = infos
+            count++
+            if (count == total)
+                displayProfile()
         })
+
+        connection.query("SELECT interest FROM tags", (err, rows) => {
+            if (err) throw err;
+            tags = rows
+            count++
+            if (count == total)
+                displayProfile()
+        });
+
+        connection.query("SELECT interest FROM users_tags WHERE user_id = ?", user.id, (err, rows) => {
+            if (err) throw err;
+            console.log(JSON.stringify(rows, null, 4));
+            let tab = []
+            rows.forEach(row => {
+                tab.push(row.interest)
+            });
+            interests = tab.join(', ')
+            count++
+            if (count == total)
+                displayProfile()
+        });
     });
 
     app.post('/modify_profile', isLoggedIn, (req, res) => {
@@ -64,20 +98,26 @@ module.exports = (app, passport, async) => {
 
         console.log(JSON.stringify(params, null, 4));
 
-        for (var i in params) {
+        for (let i in params) {
             if (params[i] && i !== 'confirm') total++
         }
         console.log(total)
+
         if (total === 0) {
             req.flashAdd('tabError', 'Aucune modification enregistree.');
             res.redirect('/profile')
         }
+
         function modify () {
             console.log(JSON.stringify(o, null, 4));
             if (Object.keys(o).length !== 0){
                 let User = require('./models/user')
                 User.update(id, o, () => {
-                    req.flashAdd('tabSuccess', 'Modifications faites avec succes');
+                    console.log("Callback Update")
+                    console.log(JSON.stringify(o, null, 4));
+                    for (let i in o) {
+                        if (o[i] && i !== 'confirm') req.flashAdd('tabSuccess', i+' -> '+o[i]);
+                    }
                     res.redirect('/profile')
                 })
             } else res.redirect('/profile')
@@ -86,6 +126,16 @@ module.exports = (app, passport, async) => {
         function checkField (i) {
             if (i === "password") {
                 Check[i](params[i], params["confirm"], req, (check) => {
+                    let bcrypt = require('bcrypt-nodejs');
+                    if (check === true) o[i] = bcrypt.hashSync(params[i], bcrypt.genSaltSync(9))
+                    count++
+                    if (count === total) {
+                        console.log(count+" === "+total)
+                        modify()
+                    }
+                })
+            } else if (i === "interests") {
+                Check[i](params[i], req, (check) => {
                     if (check === true) o[i] = params[i]
                     count++
                     if (count === total) {
@@ -93,8 +143,7 @@ module.exports = (app, passport, async) => {
                         modify()
                     }
                 })
-            }
-            else Check[i](params[i], req, (check) => {
+            } else Check[i](params[i], req, (check) => {
                 if (check === true) o[i] = params[i]
                 count++
                 if (count === total) {

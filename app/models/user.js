@@ -40,8 +40,7 @@ class User {
 
     static findByLogin (login, callback) {
         connection.query('SELECT * FROM users WHERE login = ?', [login], (err, rows) => {
-            if (err) throw err
-            callback(rows[0])
+            callback(rows[0], err)
         })
     }
 

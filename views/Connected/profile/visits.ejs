@@ -1,0 +1,23 @@
+<div class="ui link cards">
+    <% for (user of visits) { %>
+        <div class="card">
+                <div class="image">
+                    <img src="/assets/pics/molly.png">
+                </div>
+                <div class="content">
+                    <div class="header"><%= user.login %></div>
+                    <div class="meta">
+                        <span class="date"><%= user.prenom %> <%= user.nom %></span>
+                    </div>
+                    <div class="description">
+                            <%= user.bio %>
+                    </div>
+                </div>
+                <div class="extra content">
+                    <span class="right floated">
+                            <%= user.localisation %>
+                    </span>
+                </div>
+            </div>
+    <% } %>   
+</div>

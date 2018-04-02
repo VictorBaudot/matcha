@@ -1,3 +1,4 @@
+<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyD1BJh8Wr--cY3PkcqAdl1XIxfJdpNr72Q&libraries=places"></script>
 <form onkeypress="return event.keyCode != 13;" action="/modify_profile" method="post" class="ui equal width form">
     <div class="fields">
         <div class="field">
@@ -21,16 +22,9 @@
         </div>
         <div class="field">
             <label>Localisation</label>
-            <select class="ui fluid search dropdown">
-                <option value="">Lieu</option>
-                <option value="AF">Afghanistan</option>
-                <option value="AX">Åland Islands</option>
-                <option value="AL">Albania</option>
-                <option value="DZ">Algeria</option>
-                <option value="AS">American Samoa</option>
-                <option value="AD">Andorra</option>
-                <option value="ZW">Zimbabwe</option>
-            </select>
+            <input type="text" id="lat" name="lat" hidden/>
+            <input type="text" id="lng" name="lng" hidden/>
+            <input type="text" id="txtPlaces" placeholder="Localisation" name="localisation"/>
         </div>
     </div>
 
@@ -105,3 +99,7 @@
         $('.ui.dropdown').dropdown();
         $('.ui.multiple.search.dropdown').dropdown({allowAdditions: true});
 </script>
+<% if (!infos_user.localisation) { %>
+    <script type="text/javascript" src="/assets/geo.js"></script>
+<% } %>
+<script type="text/javascript" src="/assets/geo_autocomplete.js"></script>

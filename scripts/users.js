@@ -15,6 +15,8 @@ CREATE TABLE IF NOT EXISTS \`users\` ( \
 	orientation enum('Hetero', 'Homo', 'Bi') NOT NULL default 'Bi', \
 	bio TEXT NULL, \
 	localisation VARCHAR(255) NULL, \
+	lat FLOAT( 10, 6 ) NOT NULL, \
+	lng FLOAT( 10, 6 ) NOT NULL, \
         PRIMARY KEY (id) \
 )`);
 

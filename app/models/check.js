@@ -134,6 +134,14 @@ var Check = {
     localisation: localisation = (localisation, req, cb) => {
         let rep = true
         cb(rep)
+    },
+    lat: lat = (lat, req, cb) => {
+        let rep = true
+        cb(rep)
+    },
+    lng: lng = (lng, req, cb) => {
+        let rep = true
+        cb(rep)
     }
 }
 

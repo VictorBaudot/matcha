@@ -84,18 +84,18 @@ module.exports = (app, passport, async) => {
     });
 
     app.post('/modify_profile', isLoggedIn, (req, res) => {
-   //     console.log(req.body)
+ //       console.log(req.body)
    //     console.log(req.user.id + " --- " + req.user.login)
    
         const Check = require('./models/check')
-        var params = {login, prenom, nom, email, age, password, confirm, genre, orientation, bio, interests, localisation} = req.body
+        var params = {login, prenom, nom, email, age, password, confirm, genre, orientation, bio, interests, localisation, lat, lng} = req.body
         var count = 0
         var o = {}
         let id = req.user.id
         var valid = true
         var total = 0
 
- //       console.log(JSON.stringify(params, null, 4));
+        console.log(JSON.stringify(params, null, 4));
 
         for (let i in params) {
             if (params[i] && i !== 'confirm') total++
@@ -115,7 +115,7 @@ module.exports = (app, passport, async) => {
  //                   console.log("Callback Update")
   //                  console.log(JSON.stringify(o, null, 4));
                     for (let i in o) {
-                        if (o[i] && i !== 'confirm') req.flashAdd('tabSuccess', i+' -> '+o[i]);
+                        if (o[i] && i !== 'confirm' && i !== 'lat' && i !== 'lng') req.flashAdd('tabSuccess', i+' -> '+o[i]);
                     }
                     res.redirect('/profile')
                 })

@@ -3,7 +3,16 @@ module.exports = (app, passport, async) => {
 
     app.get('/', (req, res) => {
         if (req.isAuthenticated()) {
-            res.render("Connected/index.ejs")
+            let users
+            function displayProfile() {
+                res.render('Connected/index.ejs', {users})
+            }
+
+            connection.query("SELECT * FROM users", (err, rows) => {
+                if (err) throw err;
+                users = rows
+                displayProfile()
+            });
         }
         else res.render("NotConnected/index.ejs")
     })
@@ -12,11 +21,38 @@ module.exports = (app, passport, async) => {
         res.render("NotConnected/forgot_pwd.ejs")
     })
 
+
+    // =====================================
+    // CHATS ===============================
+    // =====================================
+    app.get('/chats', isLoggedIn, (req, res) => {
+        let login = req.user.login
+        let user = req.user
+        let matchs
+        let User = require('./models/user')
+        let count = 0
+        let total = 1
+
+        function displayProfile() {
+            res.render("Connected/chats.ejs", {matchs})
+        }
+
+        connection.query("SELECT * FROM users INNER JOIN matchs ON matchs.user_id = users.id WHERE matchs.bg_id = ?", user.id, (err, rows) => {
+            if (err) throw err;
+            matchs = rows
+            console.log(JSON.stringify(matchs, null, 4));
+            count++
+            if (count == total)
+                displayProfile()
+        });
+
+    });
+
     // =====================================
     // SIGNIN ==============================
     // =====================================
     app.post('/signin', checkCredentials, passport.authenticate('local-signin', {
-        successRedirect: '/profile', // redirect to the secure profile section
+        successRedirect: '/chats', // redirect to the secure profile section
         failureRedirect: '/', // redirect back to the signup page if there is an error
         failureFlash: true, // allow flash messages
     }), ({ body, session }, res) => {

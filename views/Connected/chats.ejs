@@ -1,0 +1,39 @@
+<% include header %>
+<div class="ui grid">
+    <% if (!matchs[0]) { %>
+        <h1>Aucun match desole</h1>
+    <% } else { %>
+        <div class="four wide column">
+            <div class="ui vertical fluid tabular menu">
+                <% let i = 0;
+                    for (user of matchs) {
+                        if (i == 0) { %>
+                            <a class="item active" data-tab="<%= user.id %>"><%= user.login %></a>
+                        <% } else { %>
+                            <a class="item" data-tab="<%= user.id %>"><%= user.login %></a>
+                        <% } %>
+                    <% i++;
+                    } %>   
+            </div>
+        </div>
+        <div class="twelve wide stretched column">
+            <div class="ui segment">
+                <% i = 0;
+                    for (user of matchs) {
+                        if (i == 0) { %>
+                            <div class="ui tab active" data-tab="<%= user.id %>">
+                        <% } else { %>
+                            <div class="ui tab " data-tab="<%= user.id %>">
+                        <% } %>
+                                <%= user.email %>
+                            </div>
+                    <% i++;
+                    } %>
+            </div>
+        </div>
+    <% } %>
+</div>
+<script>
+    $('.menu .item').tab();
+</script>
+<% include footer %>

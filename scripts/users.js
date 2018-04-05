@@ -14,10 +14,14 @@ CREATE TABLE IF NOT EXISTS \`users\` ( \
 	genre enum('Homme', 'Femme') NOT NULL default 'Homme', \
 	orientation enum('Hetero', 'Homo', 'Bi') NOT NULL default 'Bi', \
 	bio TEXT NULL, \
+	token TEXT NULL, \
 	localisation VARCHAR(255) NULL, \
 	lat FLOAT( 10, 6 ) NULL, \
 	lng FLOAT( 10, 6 ) NULL, \
         PRIMARY KEY (id) \
-)`);
+)`, (err) => {
+	if (err) console.error(err)
+	else console.log('Success: table users Created!')
+});
 
 connection.end();

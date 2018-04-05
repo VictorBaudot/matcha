@@ -1,7 +1,45 @@
 </div>
 <script src="/socket.io/socket.io.js"></script>
 <script>
-    var socket = io.connect('http://127.0.0.1:6969');
+    var startTchat;
+    var nb_notifs = <%= nb_notifs %>;
+
+    (function($) {
+        var socket = io.connect('http://127.0.0.1:6969');
+
+        startTchat = function(user_id, token){
+            socket.emit('login', {
+                id: user_id,
+                token: token
+            });
+        }
+        
+        $('#like').on('click', (e) => {
+            e.preventDefault()
+            socket.emit('like', {
+                user_id: <%= user.id %>,
+                bg_id: $('#like_bg_id').val()
+            })
+        })
+
+        socket.on('logged', () => {
+            console.log("LOGGED IN -> SUCCESS")
+        })
+
+        socket.on('mybad', (error) => {
+            console.error(error)
+        })
+
+        socket.on('notif', (notif) => {
+            console.log("Notif: ")
+            console.log(notif)
+            nb_notifs++
+            $('#nb_notifs').text(nb_notifs)
+        })
+
+    })(jQuery);
+
+    startTchat(<%= user.id %>, "<%= user.token %>");
 </script>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Matcha</title>
+  <title><%= title %> - Matcha</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="/assets/semantic/dist/semantic.min.css">
   <link rel="stylesheet" href="/assets/style.css">
@@ -15,10 +15,14 @@
   <script src="/assets/semantic/dist/semantic.min.js"></script>
   </style>
 </head>
-<div class="ui fixed inverted menu">
-  <a href="/" class="header item">Accueil</a>
-  <a href="/profile" class="header item">Profil</a>
-  <a href="/chats" class="header item">Chats</a>
+<div class="ui large inverted teal five item pointing menu">
+  <a href="/profile" class="header item <% if (title === 'Profil'){ %><%= 'active' %><% } %>">Profil</a>
+  <a href="/notifs" class="header item <% if (title === 'Notifs'){ %><%= 'active' %><% } %>">
+    Notifs
+    <div id="nb_notifs" class="ui teal basic left pointing label"><%= nb_notifs %></div>
+  </a>
+  <a href="/" class="header item <% if (title === 'Accueil'){ %><%= 'active' %><% } %>">Matcha</a>
+  <a href="/chats" class="header item <% if (title === 'Chats'){ %><%= 'active' %><% } %>">Chats</a>
   <a href="/logout" class="header item">Deconnexion</a>
 </div>
 <div class="ui main container">

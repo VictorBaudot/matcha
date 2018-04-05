@@ -3,6 +3,7 @@ const likeBlockReport = require ('./routes/likeBlockReport')
 const notConnected = require ('./routes/notConnected')
 const profile = require ('./routes/profile')
 const root = require ('./routes/root')
+const notifs = require ('./routes/notifs')
 
 module.exports = (app, passport) => {
 
@@ -21,11 +22,15 @@ module.exports = (app, passport) => {
         chats.chats(req, res)
     });
 
+    app.get('/notifs', isLoggedIn, (req, res) => {
+        notifs.notifs(req, res)
+    });
+
     // =====================================
     // SIGNIN ==============================
     // =====================================
     app.post('/signin', checkCredentials, passport.authenticate('local-signin', {
-        successRedirect: '/chats', // redirect to the secure profile section
+        successRedirect: '/', // redirect to the secure profile section
         failureRedirect: '/', // redirect back to the signup page if there is an error
         failureFlash: true, // allow flash messages
     }), ({ body, session }, res) => {

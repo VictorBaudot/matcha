@@ -7,10 +7,11 @@ exports.profile = (req, res) => {
   let tags, interests, likes, visits
   let User = require('./../models/user')
   let count = 0
-  let total = 5
+  let total = 6
+  let nb_notifs = 0
 
   function displayProfile() {
-      res.render('Connected/profile/profile.ejs', {infos_user, tags, interests, likes, visits, user})
+      res.render('Connected/profile/profile.ejs', {infos_user, tags, interests, likes, visits, user, nb_notifs, title: 'Profil'})
   }
 
   User.findByLogin(login, (infos, err) => {
@@ -20,6 +21,14 @@ exports.profile = (req, res) => {
       if (count == total)
           displayProfile()
   })
+
+  connection.query("SELECT * FROM notifs WHERE bg_id = ?", req.user.id, (err, rows) => {
+    if (err) throw err;
+    nb_notifs = rows.length
+    count++
+    if (count == total)
+      displayProfile()
+});
 
   connection.query("SELECT interest FROM tags", (err, rows) => {
       if (err) throw err;
@@ -110,7 +119,10 @@ exports.modify_profile = (req, res) => {
               }
           })
       } else Check[i](params[i], req, (check) => {
-          if (check === true) o[i] = params[i]
+          if (check === true) {
+            if (i === "prenom" || i === "nom") o[i] = capitalizeFirstLetter(params[i])
+            else o[i] = params[i]
+          }
           count++
           if (count === total) {
               modify()
@@ -138,10 +150,19 @@ exports.modify_profile = (req, res) => {
       let liked, blocked, reported
       let User = require('./../models/user')
       let user_id = req.user.id
+      let count = 0, nb_notifs = 0, total = 2
 
       function displayBg() {
-          res.render('Connected/bg', {infos_user, interests, liked, blocked, reported})
+          res.render('Connected/bg', {infos_user, interests, liked, blocked, reported, user: req.user, nb_notifs, title: login})
       }
+
+      connection.query("SELECT * FROM notifs WHERE bg_id = ?", req.user.id, (err, rows) => {
+          if (err) throw err;
+          nb_notifs = rows.length
+          count++
+          if (count == total)
+            displayProfile()
+      });
 
       function likeBlockReport (bg_id) {
           connection.query("SELECT * FROM likes WHERE user_id = ? AND bg_id = ?", [user_id, bg_id], (err, rows) => {
@@ -156,7 +177,9 @@ exports.modify_profile = (req, res) => {
                       if (err) throw err;
                       if (!rows.length) reported = false
                       else reported = true
-                      displayBg()
+                      count++
+                      if (count == total)
+                        displayBg()
                   });
               });
           });
@@ -197,3 +220,7 @@ exports.modify_profile = (req, res) => {
 
       
   }
+
+function capitalizeFirstLetter(string) {
+    return string[0].toUpperCase() + string.slice(1).toLowerCase();
+}

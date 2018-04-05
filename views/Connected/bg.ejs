@@ -46,20 +46,17 @@
 </div>
 <div class="ui three column grid">
     <div class="column">
-        <form action="/like" method="post" class="ui form">
-            <input type="text" value="<%= infos_user.id %>" name="bg_id" hidden>
-            <button type="submit" class="ui red button">
-            <%  if (!liked) { %>
-                <i class="heart icon"></i> Liker
-            <% } else { %>
-                <i class="heart icon"></i> Ne plus liker
-            <% } %>
-            </button>
-        </form>
+        <input type="text" value="<%= infos_user.id %>" id="like_bg_id" hidden>
+        <button id="like" class="ui red button">
+        <%  if (!liked) { %>
+            <i class="heart icon"></i> Liker
+        <% } else { %>
+            <i class="heart icon"></i> Ne plus liker
+        <% } %>
+        </button>
     </div>
     <div class="column">
         <form action="/block" method="post" class="ui form">
-            <input type="text" value="<%= infos_user.id %>" name="bg_id" hidden>
             <button type="submit" class="ui black button">
             <%  if (!blocked) { %>
                 <i class="lock icon"></i> Bloquer

@@ -1,6 +1,6 @@
 const pwdRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{6,20})");
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const nomRegex = new RegExp("^[a-zA-Z_]{3,16}$");
+const nomRegex = new RegExp("^[a-zA-Z]{3,16}$");
 const loginRegex = new RegExp("^[a-zA-Z0-9_]{3,16}$");
 const interestRegex = new RegExp("^#[a-zA-Z0-9_]{2,18}$");
 

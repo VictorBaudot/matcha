@@ -40,16 +40,17 @@ io.on('connection', function(socket){
     var me = false;
 
     socket.on('login', function(user){
-        console.log(user)
-        connection.query('SELECT * FROM users WHERE id = ?', [user.id], function (err, rows) {
-            if(err){
+        //console.log(user)
+        connection.query('SELECT * FROM users WHERE id = ?', [user.id], (err, rows) => {
+            if (err) {
                 socket.emit('mybad', {error: err.code});
-            }else if(rows.length === 1 && rows[0].token === user.token) {
+            } else if(rows.length === 1 && rows[0].token === user.token) {
                 me = {
                     username: rows[0].login,
                     id: rows[0].id,
                     socketid: socket.id
                 };
+                console.log(me)
                 socket.emit('logged');
                 users[me.id] = me;
             } else {
@@ -86,11 +87,29 @@ io.on('connection', function(socket){
                         } else {
                             socket.emit('mymsg', message)
                             if (users[message.bg_id]) io.to(users[message.bg_id].socketid).emit('newmsg', message)
+                            connection.query('INSERT INTO notifs SET user_id = ?, type = ?, bg_id = ?, creation = ?', [
+                                message.user.id,
+                                'message',
+                                message.bg_id,
+                                new Date(message.creation)
+                            ], (err) => {
+                                if(err){
+                                    socket.emit('mybad', err.code)
+                                } else {
+                                    console.log("Destinataire notif: ")
+                                    console.log(users[message.bg_id])
+                                    if (users[message.bg_id]) io.to(users[message.bg_id].socketid).emit('notif', message)
+                                }
+                            })
                         }
                     })
                 }
             })
         }
+    })
+
+    socket.on('like', (infos) => {
+        notif.user = me;
     })
 })
 

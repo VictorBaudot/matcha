@@ -1,0 +1,26 @@
+<% include header %>
+<% if (!notifs[0]) { %>
+  <h1>Aucune notification</h1>
+<% } else { %>
+    <div class="ui divided link items">
+        <% notifs.forEach(notif => { %>
+        <a class="item" href="/bg/<%= notif.login %>">
+          <div class="ui tiny image">
+            <img src="/assets/pics/molly.png">
+          </div>
+          <div class="middle aligned content">
+            <div class="header">
+                <i class="favorite icon"></i>
+                <%= notif.prenom %> <%= notif.nom %><%= notif.msg %>
+            </div>
+            <div class="extra">
+              <div class="metadata">
+                <span class="date"><%= notif.creation %></span>
+              </div>
+            </div>
+          </div>
+        </a>  
+      <% }) %>
+      </div> 
+  <% } %>
+<% include footer %>

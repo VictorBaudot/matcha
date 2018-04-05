@@ -1,25 +1,25 @@
 <% include header %>
 <div class="ui link cards">
-    <% for (user of users) { %>
-        <div class="card">
+    <% for (usr of users) { %>
+        <a class="card" href="/bg/<%= usr.login %>">
                 <div class="image">
                     <img src="/assets/pics/molly.png">
                 </div>
                 <div class="content">
-                    <div class="header"><%= user.login %></div>
+                    <div class="header"><%= usr.login %></div>
                     <div class="meta">
-                        <span class="date"><%= user.prenom %> <%= user.nom %></span>
+                        <span class="date"><%= usr.prenom %> <%= usr.nom %></span>
                     </div>
                     <div class="description">
-                            <%= user.bio %>
+                            <%= usr.bio %>
                     </div>
                 </div>
                 <div class="extra content">
                     <span class="right floated">
-                            <%= user.localisation %>
+                            <%= usr.localisation %>
                     </span>
                 </div>
-            </div>
+            </a>
     <% } %>   
 </div>
 <% include footer %>

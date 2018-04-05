@@ -4,7 +4,7 @@
         <h1>Aucun match desole</h1>
     <% } else { %>
         <div class="four wide column">
-            <div class="ui vertical fluid menu">
+            <div class="ui vertical fluid pointing menu">
                 <% let i = 0;
                     for (bg of matchs) {
                         if (i == 0) { %>
@@ -86,21 +86,28 @@
 
         socket.on('logged', () => {
             console.log("LOGGED IN -> SUCCESS")
-            })
+        })
 
         socket.on('mybad', (error) => {
             console.error(error)
         })
-        
+
+        socket.on('notif', (notif) => {
+            console.log("Notif: ")
+            console.log(notif)
+            nb_notifs++
+            $('#nb_notifs').text(nb_notifs)
+        })
+
         socket.on('mymsg', (message) => {
-            console.log(message)
+            //console.log(message)
             let id = '#messages'+message.bg_id
             let html_append = '<div class="row"><div class="right floated ten wide column"><div class="ui large blue message">'+message.message+'</div></div></div>'
             $(id).prepend(html_append)
         })
 
         socket.on('newmsg', (message) => {
-            console.log(message)
+            //console.log(message)
             let id = '#messages'+message.user.id
             $(id).prepend('<div class="row"><div class="left floated ten wide column"><div class="ui large green message">'+message.message+'</div></div></div>')
         })

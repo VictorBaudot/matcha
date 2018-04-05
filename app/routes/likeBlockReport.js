@@ -4,6 +4,7 @@ exports.like = (req, res) => {
   let user_id = req.user.id
   let bg_id = req.body.bg_id
   console.log(user_id+" - "+bg_id)
+  
   function match () {
       connection.query('INSERT INTO matchs VALUES (?, ?)', [user_id, bg_id], (err) => {
           if (err) console.error(err);

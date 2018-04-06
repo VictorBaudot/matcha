@@ -68,8 +68,8 @@ var Check = {
         if (isNaN(age)) {
             req.flashAdd('tabError', 'Tu es cense mettre un nombre pour ton age...');
             rep = false
-        } else if (age < 16 || age > 30) {
-            req.flashAdd('tabError', 'Ton age doit etre compris entre 16 et 30');
+        } else if (age < 16 || age > 80) {
+            req.flashAdd('tabError', 'Ton age doit etre compris entre 16 et 80 ans');
             rep = false
         }
         cb(rep)

@@ -1,5 +1,26 @@
 <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyD1BJh8Wr--cY3PkcqAdl1XIxfJdpNr72Q&libraries=places"></script>
-<form onkeypress="return event.keyCode != 13;" action="/modify_profile" method="post" class="ui equal width form">
+<form onkeypress="return event.keyCode != 13;" action="/modify_profile" method="post" enctype="multipart/form-data" class="ui equal width form">
+    <div class="fields">
+        <div class="field">
+            <label for="pp" class="ui icon button">
+                <p><i class="cloud icon"></i> Photo de profil</p>
+            </label>
+            <input type="file" id="pp" name="pp" hidden>
+        </div>
+        <div class="field">
+            <label for="p2" class="ui icon button">
+                <p><i class="cloud icon"></i> Photo 2</p>
+            </label>
+            <input type="file" id="p2" name="p2" hidden>
+        </div>
+        <div class="field">
+            <label for="p3" class="ui icon button">
+                <p><i class="cloud icon"></i> Photo 3</p>
+            </label>
+            <input type="file" id="p3" name="p3" hidden>
+        </div>
+    </div>
+    
     <div class="fields">
         <div class="field">
             <label>Pseudo</label>
@@ -18,7 +39,7 @@
     <div class="fields">
         <div class="field">
             <label>Age</label>
-            <input type="number" placeholder="24" min="16" max="30" value="" name="age">
+            <input type="number" placeholder="24" min="16" max="80" value="" name="age">
         </div>
         <div class="field">
             <label>Localisation</label>
@@ -91,7 +112,7 @@
         </div>
     </div>
     
-    <button type="submit" class="ui blue submit button" value="submit">
+    <button type="submit" class="fluid ui teal submit button" value="submit">
         Modifier
     </button>
 </form>

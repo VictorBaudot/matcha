@@ -1,5 +1,4 @@
 </div>
-<script src="/socket.io/socket.io.js"></script>
 <script>
     var startTchat;
     var nb_notifs = <%= nb_notifs %>;
@@ -38,6 +37,11 @@
         socket.on('mybad', (error) => {
             console.error(error)
         })
+
+        socket.on('connect_error', function() {
+            console.log('Got disconnect!');
+            socket.disconnect();
+        });
 
         socket.on('notif', (notif) => {
             console.log("Notif: ")

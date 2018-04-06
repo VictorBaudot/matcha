@@ -1,4 +1,6 @@
 const connection = require('../../config/db')
+const multer = require('multer')
+const path = require('path')
 
 exports.profile = (req, res) => {
   let login = req.user.login
@@ -67,77 +69,111 @@ exports.profile = (req, res) => {
   });
 };
 
+exports.modify_pics = (req, res, cb) => {
+    // console.log("File: ")
+    // console.log(req.files)
+    let pics = req.files
+    let o = {}
+    let id = req.user.id
+
+    function modifyp () {
+        //console.log(JSON.stringify(o, null, 4));
+        if (Object.keys(o).length !== 0){
+            let User = require('./../models/user')
+            User.update(id, o, () => {
+                req.flashAdd('tabSuccess', 'Modification des photos de profil reussie.');
+                console.log(req.session.flash)
+                cb(req, res)
+            })
+        } else cb(req, res)
+    }
+
+    for (let i in pics) {
+        if (pics[i]) {
+            // console.log(i+" - "+pics[i][0].filename)
+            o[i] = pics[i][0].filename
+        }
+    }
+    
+    modifyp()
+}
+
 exports.modify_profile = (req, res) => {
-  const Check = require('./../models/check')
-  var params = {login, prenom, nom, email, age, password, confirm, genre, orientation, bio, interests, localisation, lat, lng} = req.body
-  var count = 0
-  var o = {}
-  let id = req.user.id
-  var valid = true
-  var total = 0
+    // console.log("File: ")
+    // console.log(req.files)
+    // console.log("Body: ")
+    // console.log(req.body)
+    const Check = require('./../models/check')
+    let params = {login, prenom, nom, email, age, password, confirm, genre, orientation, bio, interests, localisation, lat, lng} = req.body
+    params = {login, prenom, nom, email, age, password, confirm, genre, orientation, bio, interests, localisation, lat, lng}
+    let count = 0
+    let o = {}
+    let id = req.user.id
+    let valid = true
+    let total = 0
 
-  console.log(JSON.stringify(params, null, 4));
+    // console.log(JSON.stringify(params, null, 4));
 
-  for (let i in params) {
-      if (params[i] && i !== 'confirm') total++
-  }
+    for (let i in params) {
+        if (params[i] && i !== 'confirm') total++
+    }
 
-  if (total === 0) {
-      req.flashAdd('tabError', 'Aucune modification enregistree.');
-      res.redirect('/profile')
-  }
+    if (total === 0) {
+        if (!req.files) req.flashAdd('tabError', 'Aucune modification n\'a ete enregistree.');
+        res.redirect('/profile')
+    }
 
-  function modify () {
-//        console.log(JSON.stringify(o, null, 4));
-      if (Object.keys(o).length !== 0){
-          let User = require('./../models/user')
-          User.update(id, o, () => {
-              for (let i in o) {
-                  if (o[i] && i !== 'confirm' && i !== 'lat' && i !== 'lng') req.flashAdd('tabSuccess', i+' -> '+o[i]);
-              }
-              res.redirect('/profile')
-          })
-      } else res.redirect('/profile')
-  }
+    function modify () {
+    //        console.log(JSON.stringify(o, null, 4));
+        if (Object.keys(o).length !== 0){
+            let User = require('./../models/user')
+            User.update(id, o, () => {
+                for (let i in o) {
+                    if (o[i] && i !== 'confirm' && i !== 'lat' && i !== 'lng') req.flashAdd('tabSuccess', i+' -> '+o[i]);
+                }
+                res.redirect('/profile')
+            })
+        } else res.redirect('/profile')
+    }
 
-  function checkField (i) {
-      if (i === "password") {
-          Check[i](params[i], params["confirm"], req, (check) => {
-              let bcrypt = require('bcrypt-nodejs');
-              if (check === true) o[i] = bcrypt.hashSync(params[i], bcrypt.genSaltSync(9))
-              count++
-              if (count === total) {
-                  modify()
-              }
-          })
-      } else if (i === "interests") {
-          Check[i](params[i], req, (check) => {
-              if (check === true) o[i] = params[i]
-              count++
-              if (count === total) {
-                  modify()
-              }
-          })
-      } else Check[i](params[i], req, (check) => {
-          if (check === true) {
+    function checkField (i) {
+        if (i === "password") {
+            Check[i](params[i], params["confirm"], req, (check) => {
+                let bcrypt = require('bcrypt-nodejs');
+                if (check === true) o[i] = bcrypt.hashSync(params[i], bcrypt.genSaltSync(9))
+                count++
+                if (count === total) {
+                    modify()
+                }
+            })
+        } else if (i === "interests") {
+            Check[i](params[i], req, (check) => {
+                if (check === true) o[i] = params[i]
+                count++
+                if (count === total) {
+                    modify()
+                }
+            })
+        } else Check[i](params[i], req, (check) => {
+            if (check === true) {
             if (i === "prenom" || i === "nom") o[i] = capitalizeFirstLetter(params[i])
             else o[i] = params[i]
-          }
-          count++
-          if (count === total) {
-              modify()
-          }
-      })
-  }
+            }
+            count++
+            if (count === total) {
+                modify()
+            }
+        })
+    }
 
-  for (let i in params) {
-      if (params[i] && i !== 'confirm') {
-      //    console.log(i+" - "+params[i])
-          checkField(i)
-      }
-  }
+    for (let i in params) {
+        if (params[i] && i !== 'confirm') {
+        //    console.log(i+" - "+params[i])
+            checkField(i)
+        }
+    }
 
-};
+}
 
 
     // =====================================

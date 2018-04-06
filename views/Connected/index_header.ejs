@@ -7,12 +7,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="/assets/semantic/dist/semantic.min.css">
   <link rel="stylesheet" href="/assets/style.css">
+  <link rel="stylesheet" href="/assets/nouislider.min.css">
+  <link rel="stylesheet" href="/assets/nouislider_perso.css">
   <script
     src="https://code.jquery.com/jquery-3.1.1.min.js"
     integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
     crossorigin="anonymous"></script>
   <script src="/socket.io/socket.io.js"></script>
   <script src="/assets/semantic/dist/semantic.min.js"></script>
+  <script src="/assets/nouislider.min.js"></script>
 </head>
 <body>
 <div class="ui large inverted teal five item pointing menu" style="border-radius:0;">
@@ -25,7 +28,7 @@
   <a href="/chats" class="header item <% if (title === 'Chats'){ %><%= 'active' %><% } %>">Chats</a>
   <a href="/logout" class="header item">Deconnexion</a>
 </div>
-<div class="ui main container">
+<div class="ui fluid container">
     <%  if (locals.flash && locals.flash.tabSuccess) {
           for (id in locals.flash.tabSuccess) { %>
             <div class="ui positive message">

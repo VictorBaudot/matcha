@@ -2,13 +2,13 @@ const connection = require('../../config/db')
 
 exports.root = (req, res) => {
   if (req.isAuthenticated()) {
-      let users
+      let users, tags
       let count = 0
-      let total = 2
+      let total = 3
       let nb_notifs = 0
       
       function displayProfile() {
-          res.render('Connected/index.ejs', {user: req.user, users, nb_notifs, title: 'Accueil'})
+          res.render('Connected/index.ejs', {tags, user: req.user, users, nb_notifs, title: 'Accueil'})
       }
 
       connection.query("SELECT * FROM users", (err, rows) => {
@@ -25,6 +25,14 @@ exports.root = (req, res) => {
         count++
         if (count == total)
           displayProfile()
+      });
+
+      connection.query("SELECT interest FROM tags", (err, rows) => {
+        if (err) throw err;
+        tags = rows
+        count++
+        if (count == total)
+            displayProfile()
     });
   }
   else res.render("NotConnected/index.ejs")

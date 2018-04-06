@@ -6,6 +6,7 @@ const passport = require('passport')
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
 const session = require("express-session")
+const busboyBodyParser = require('busboy-body-parser')
 
 const port = 6969;
 const hostname = '127.0.0.1';
@@ -19,8 +20,9 @@ app.set('view engine', 'ejs')
 // Middlewares --- Attention a leur ordre
 app.use('/assets', express.static('public'))
 app.use(cookieParser())
-app.use(bodyParser.urlencoded({extended: false}))
+app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
+// app.use(busboyBodyParser())
 app.use(session({
     secret: 'secret',
     resave: true,
@@ -50,7 +52,7 @@ io.on('connection', function(socket){
                     id: rows[0].id,
                     socketid: socket.id
                 };
-                console.log(me)
+                // console.log(me)
                 socket.emit('logged');
                 users[me.id] = me;
             } else {

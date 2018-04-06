@@ -1,17 +1,98 @@
-<% include header %>
-<div class="ui link cards">
+<% include index_header %>
+<div class="ui main container">
+<form action="" class="ui form">
+    <div class="field">
+        <span class="range-values">
+            <span id="age-value-lower"></span>
+            <span>-</span>
+            <span id="age-value-upper"></span>
+        </span>
+        <label>Age</label>
+        <div id="ageRange"></div>
+    </div>
+    <div class="field">
+        <span class="range-values">
+            <span id="distance-value-lower"></span>
+            <span>-</span>
+            <span id="distance-value-upper"></span>
+        </span>
+        <label>Distance (km)</label>
+        <div id="distanceRange"></div>
+    </div>
+    <div class="field">
+        <span class="range-values">
+            <span id="pop-value-lower"></span>
+            <span>-</span>
+            <span id="pop-value-upper"></span>
+        </span>
+        <label>Popularite</label>
+        <div id="popRange"></div>
+    </div>
+    <div class="field">
+        <label>Interets</label>
+        <div class="ui fluid multiple search selection dropdown">
+            <input name="interests" type="hidden">
+            <i class="dropdown icon"></i>
+            <div class="default text">Interets</div>
+            <div class="menu">
+                <% for (tag of tags) { %>
+                    <div class="item" data-value="<%= tag.interest %>"><%= tag.interest %></div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+
+    <div class="four fields">
+        <div class="field"></div>
+        <div class="field">
+            <div class="ui fluid labeled teal icon centered submit button">
+                <i class="filter icon"></i>
+                <span class="text">Filtrer</span>
+            </div>
+        </div>
+        <div class="field">
+            <div class="ui fluid searchable dropdown labeled teal icon centered button">
+                <i class="sort icon"></i>
+                <span class="text">Trier</span>
+                <div class="menu">
+                    <div class="header">Trier par</div>
+                    <div class="item">
+                        <div class="ui red empty circular label"></div>
+                        Age
+                    </div>
+                    <div class="item">
+                        <div class="ui blue empty circular label"></div>
+                        Distance
+                    </div>
+                    <div class="item">
+                        <div class="ui black empty circular label"></div>
+                        Popularite
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="field"></div>
+    </div>
+</form>
+</div>
+<div class="ui main container"></div>
+<div class="ui link centered cards">
     <% for (usr of users) { %>
-        <a class="card" href="/bg/<%= usr.login %>">
+        <a class="teal card" href="/bg/<%= usr.login %>">
                 <div class="image">
-                    <img src="/assets/pics/molly.png">
+                    <img src="/assets/pics/<%= usr.pp %>">
                 </div>
                 <div class="content">
-                    <div class="header"><%= usr.login %></div>
+                    <span class="right floated">
+                        <i class="favorite teal outline icon"></i>
+                        <span style="color:teal !important;">17</span>
+                    </span>
+                    <div class="header"><%= usr.prenom %> <%= usr.nom %></div>
                     <div class="meta">
-                        <span class="date"><%= usr.prenom %> <%= usr.nom %></span>
+                        <span class="date"><%= usr.age %></span>
                     </div>
                     <div class="description">
-                            <%= usr.bio %>
+                        <%= usr.bio %>
                     </div>
                 </div>
                 <div class="extra content">
@@ -22,4 +103,87 @@
             </a>
     <% } %>   
 </div>
+<script>
+    $('.ui.dropdown').dropdown();
+    $('.ui.multiple.search.dropdown').dropdown({allowAdditions: true});
+
+    var distanceRange = document.getElementById('distanceRange');
+    var ageRange = document.getElementById('ageRange');
+    var popRange = document.getElementById('popRange');
+
+    noUiSlider.create(ageRange, {
+        start: [20, 40],
+        connect: true,
+        margin: 1,
+        step: 1,
+        tooltips: true,
+        behaviour: 'tap-drag',
+        range: {
+            'min': 0,
+            'max': 100
+        }
+    });
+
+    noUiSlider.create(distanceRange, {
+        start: [20, 60],
+        connect: true,
+        margin: 1,
+        step: 0.5,
+        tooltips: [ true, true ],
+        behaviour: 'tap-drag',
+        range: {
+            'min': 0,
+            'max': 100
+        }
+    });
+
+    noUiSlider.create(popRange, {
+        start: [400, 800],
+        connect: true,
+        margin: 1,
+        step: 1,
+        tooltips: [ true, true ],
+        behaviour: 'tap-drag',
+        range: {
+            'min': 0,
+            'max': 1000
+        }
+    });
+
+    ageRange.noUiSlider.on('change', function ( values, handle ) {
+        let hoho = [null, null]
+        if ( values[handle] < 16 ) {
+            hoho = (handle === 0) ? [16, null] : [null, 16];
+            ageRange.noUiSlider.set(hoho);
+        } else if ( values[handle] > 80 ) {
+            hoho = (handle === 0) ? [80, null] : [null, 80];
+            ageRange.noUiSlider.set(hoho);
+        } 
+    });
+
+    var ageValues = [
+        document.getElementById('age-value-lower'),
+        document.getElementById('age-value-upper')
+    ];
+
+    var distanceValues = [
+        document.getElementById('distance-value-lower'),
+        document.getElementById('distance-value-upper')
+    ];
+
+    var popValues = [
+        document.getElementById('pop-value-lower'),
+        document.getElementById('pop-value-upper')
+    ];
+
+    ageRange.noUiSlider.on('update', function( values, handle ) {
+        ageValues[handle].innerHTML = values[handle];
+    });
+    distanceRange.noUiSlider.on('update', function( values, handle ) {
+        distanceValues[handle].innerHTML = values[handle];
+    });
+    popRange.noUiSlider.on('update', function( values, handle ) {
+        popValues[handle].innerHTML = values[handle];
+    });
+</script>
 <% include footer %>

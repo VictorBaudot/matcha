@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS \`users\` ( \
 	password TEXT NOT NULL, \
 	creation DATETIME NULL, \
 	active BINARY(1) NOT NULL default 0, \
+	ready BINARY(1) NOT NULL default 0, \
 	age INT UNSIGNED NULL, \
 	genre enum('Homme', 'Femme') NOT NULL default 'Homme', \
 	orientation enum('Hetero', 'Homo', 'Bi') NOT NULL default 'Bi', \
@@ -18,6 +19,9 @@ CREATE TABLE IF NOT EXISTS \`users\` ( \
 	localisation VARCHAR(255) NULL, \
 	lat FLOAT( 10, 6 ) NULL, \
 	lng FLOAT( 10, 6 ) NULL, \
+	pp VARCHAR(320) NOT NULL default 'default.png', \
+	p2 VARCHAR(320) NOT NULL default 'default.png', \
+	p3 VARCHAR(320) NOT NULL default 'default.png', \
         PRIMARY KEY (id) \
 )`, (err) => {
 	if (err) console.error(err)

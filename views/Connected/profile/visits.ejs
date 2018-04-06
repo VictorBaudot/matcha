@@ -2,7 +2,7 @@
     <% for (usr of visits) { %>
         <a class="card" href="/bg/<%= usr.login %>">
                 <div class="image">
-                    <img src="/assets/pics/molly.png">
+                    <img src="/assets/pics/<%= usr.pp %>">
                 </div>
                 <div class="content">
                     <div class="header"><%= usr.login %></div>

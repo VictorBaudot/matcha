@@ -60,6 +60,7 @@
 <script src="/assets/client_chat.js"></script>
 <script>
     var startTchat;
+    var nb_notifs = <%= nb_notifs %>;
 
     (function($) {
         var socket = io.connect('http://127.0.0.1:6969');

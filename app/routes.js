@@ -70,9 +70,6 @@ module.exports = (app, passport) => {
     // =====================================
     // LIKE BLOCK REPORT ===================
     // =====================================
-    app.post('/like', isLoggedIn, (req, res) => {
-        likeBlockReport.like(req, res)
-    })
 
     app.post('/block', isLoggedIn, (req, res) => {
         likeBlockReport.block(req, res)

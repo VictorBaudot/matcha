@@ -49,19 +49,20 @@
         <input type="text" value="<%= infos_user.id %>" id="like_bg_id" hidden>
         <button id="like" class="ui red button">
         <%  if (!liked) { %>
-            <i class="heart icon"></i> Liker
+            <i class="heart icon"></i><span id="text">Liker</span>
         <% } else { %>
-            <i class="heart icon"></i> Ne plus liker
+            <i class="heart icon"></i><span id="text">Ne plus liker</span>
         <% } %>
         </button>
     </div>
     <div class="column">
         <form action="/block" method="post" class="ui form">
+            <input type="text" value="<%= infos_user.id %>" name="bg_id" hidden>
             <button type="submit" class="ui black button">
             <%  if (!blocked) { %>
-                <i class="lock icon"></i> Bloquer
+                <i class="lock icon"></i><span id="text">Bloquer</span>
             <% } else { %>
-                <i class="lock icon"></i> Debloquer
+                <i class="lock icon"></i><span id="text">Debloquer</span>
             <% } %>
             </button>
         </form>
@@ -71,9 +72,9 @@
             <input type="text" value="<%= infos_user.id %>" name="bg_id" hidden>
             <button type="submit" class="ui grey button">
             <%  if (!reported) { %>
-                <i class="minus circle icon"></i> Signaler
+                <i class="minus circle icon"></i><span id="text">Signaler</span>
             <% } else { %>
-                <i class="minus circle icon"></i> Ne plus signaler
+                <i class="minus circle icon"></i><span id="text">Ne plus signaler</span>
             <% } %>
             </button>
         </form>

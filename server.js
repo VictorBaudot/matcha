@@ -108,8 +108,98 @@ io.on('connection', function(socket){
         }
     })
 
+    socket.on('visit', (infos) => {
+        let user_id = infos.user_id
+        let bg_id = infos.bg_id
+        console.log(user_id+" - "+bg_id)
+        connection.query('INSERT INTO notifs SET user_id = ?, type = ?, bg_id = ?, creation = ?', [
+            user_id,
+            'visit',
+            bg_id,
+            new Date()
+        ], (err) => {
+            if(err){
+                socket.emit('mybad', err.code)
+            } else {
+                console.log("Destinataire notif: ")
+                console.log(users[bg_id])
+                if (users[bg_id]) io.to(users[bg_id].socketid).emit('notif', 'visit')
+            }
+        })
+    })
+
     socket.on('like', (infos) => {
-        notif.user = me;
+        let user_id = infos.user_id
+        let bg_id = infos.bg_id
+        console.log(user_id+" - "+bg_id)
+
+        function addNotif(type) {
+            console.log(type)
+            connection.query('INSERT INTO notifs SET user_id = ?, type = ?, bg_id = ?, creation = ?', [
+                user_id,
+                type,
+                bg_id,
+                new Date()
+            ], (err) => {
+                if(err){
+                    socket.emit('mybad', err.code)
+                } else {
+                    console.log("Destinataire notif: ")
+                    console.log(users[bg_id])
+                    if (users[bg_id]) io.to(users[bg_id].socketid).emit('notif', type)
+                }
+            })
+        }
+
+        function match () {
+            connection.query('INSERT INTO matchs VALUES (?, ?)', [user_id, bg_id], (err) => {
+                if (err) console.error(err);
+                connection.query('INSERT INTO matchs VALUES (?, ?)', [bg_id, user_id], (err) => {
+                    if (err) console.error(err);
+                    else addNotif('match')
+                });
+            });
+            
+        }
+        function unMatch () {
+            connection.query('DELETE FROM matchs WHERE user_id = ? AND bg_id = ?', [user_id, bg_id], (err) => {
+                if (err) console.error(err);
+                connection.query('DELETE FROM matchs WHERE user_id = ? AND bg_id = ?', [bg_id, user_id], (err) => {
+                    if (err) console.error(err);
+                    else addNotif('unlike')
+                });
+            });
+        }
+        function unlike () {
+            connection.query('DELETE FROM likes WHERE user_id = ? AND bg_id = ?', [user_id, bg_id], (err) => {
+                if (err) console.error(err);
+                connection.query("SELECT * FROM likes WHERE user_id = ? AND bg_id = ?", [bg_id, user_id], (err, rows) => {
+                    if (err) throw err;
+                    if (rows.length) unMatch()
+                });
+            });
+        }
+        function like () {
+            connection.query("SELECT * FROM users WHERE id = ? AND id != ?", [bg_id, user_id], (err, rows) => {
+                if (err) throw err;
+                if (rows.length) {
+                    connection.query('INSERT INTO likes VALUES (?, ?)', [user_id, bg_id], (err) => {
+                        if (err) console.error(err);
+                        connection.query("SELECT * FROM likes WHERE user_id = ? AND bg_id = ?", [bg_id, user_id], (err, rows) => {
+                            if (err) throw err;
+                            if (rows.length) match()
+                            else addNotif('like')
+                        });
+                    });
+                }
+            });
+        }
+
+        connection.query("SELECT * FROM likes WHERE user_id = ? AND bg_id = ?", [user_id, bg_id], (err, rows) => {
+            if (err) throw err;
+            if (rows.length) unlike()
+            else like()
+        });
     })
 })
 

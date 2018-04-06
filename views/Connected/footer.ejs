@@ -3,6 +3,7 @@
 <script>
     var startTchat;
     var nb_notifs = <%= nb_notifs %>;
+    var title = "<%= title %>";
 
     (function($) {
         var socket = io.connect('http://127.0.0.1:6969');
@@ -12,6 +13,12 @@
                 id: user_id,
                 token: token
             });
+            if (title !== "Profil" && title !== "Accueil" && title !== "Chats" && title !== "Notifs") {
+                socket.emit('visit', {
+                    user_id: <%= user.id %>,
+                    bg_id: $('#like_bg_id').val()
+                })
+            }
         }
         
         $('#like').on('click', (e) => {
@@ -20,6 +27,8 @@
                 user_id: <%= user.id %>,
                 bg_id: $('#like_bg_id').val()
             })
+            if ($('#like #text').text() === "Liker") $('#like #text').text("Ne plus liker")
+            else $('#like #text').text("Liker")
         })
 
         socket.on('logged', () => {

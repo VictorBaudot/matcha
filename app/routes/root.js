@@ -11,7 +11,7 @@ exports.root = (req, res) => {
           res.render('Connected/index.ejs', {tags, user: req.user, users, nb_notifs, title: 'Accueil'})
       }
 
-      connection.query("SELECT * FROM users", (err, rows) => {
+      connection.query("SELECT * FROM users WHERE ready = 1", (err, rows) => {
           if (err) throw err;
           users = rows
           count++

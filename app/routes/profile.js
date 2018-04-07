@@ -60,7 +60,7 @@ exports.profile = (req, res) => {
       if (err) throw err;
       let tab = []
       rows.forEach(row => {
-          tab.push(row.interest)
+          tab.push('#'+row.interest)
       });
       interests = tab.join(', ')
       count++

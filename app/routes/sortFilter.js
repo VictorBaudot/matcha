@@ -76,7 +76,7 @@ exports.filter = (req, res) => {
           if (err) throw err;
           let tab = []
           rows1.forEach(row => {
-              tab.push(row.interest)
+              tab.push('#'+row.interest)
           });
           usr.interests = tab.join(', ')
           count2++

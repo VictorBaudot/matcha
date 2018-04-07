@@ -1,27 +1,28 @@
-<% include ../header %>
-<div class="ui top attached tabular menu">
-    <a class="item" data-tab="first">Mon profil</a>
-    <a class="item active" data-tab="second">Modifier</a>
-    <a class="item" data-tab="third">Visites</a>
-    <a class="item" data-tab="fourth">Likes</a>
-</div>
+<% include ../index_header %>
+<div class="ui container">
+    <div class="ui fluid four item teal secondary pointing menu">
+        <a class="item active" data-tab="first">Profil</a>
+        <a class="item" data-tab="second">Modifier</a>
+        <a class="item" data-tab="third">Visites</a>
+        <a class="item" data-tab="fourth">Likes</a>
+    </div>
 
-<div class="ui bottom attached tab segment" data-tab="first">
-    <% include public %>
-</div>
+    <div class="ui tab active" data-tab="first">
+        <% include public %>
+    </div>
 
-<div class="ui bottom attached tab segment active" data-tab="second">
-    <% include private %>
-</div>
+    <div class="ui tab" data-tab="second">
+        <% include private %>
+    </div>
 
-<div class="ui bottom attached tab segment" data-tab="third">
-    <% include visits %>
-</div>
+    <div class="ui tab" data-tab="third">
+        <% include visits %>
+    </div>
 
-<div class="ui bottom attached tab segment" data-tab="fourth">
-    <% include likes %>
+    <div class="ui tab" data-tab="fourth">
+        <% include likes %>
+    </div>
 </div>
-
 <script>
 $('.menu .item').tab();
 </script>

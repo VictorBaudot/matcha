@@ -4,6 +4,7 @@ const notConnected = require ('./routes/notConnected')
 const profile = require ('./routes/profile')
 const root = require ('./routes/root')
 const notifs = require ('./routes/notifs')
+const sortFilter = require ('./routes/sortFilter')
 
 const multer = require('multer')
 const path = require('path')
@@ -16,6 +17,10 @@ module.exports = (app, passport) => {
     
     app.get('/forgot_pwd', (req, res) => {
         notConnected.forgot_pwd(req, res)
+    })
+
+    app.post('/filter', isLoggedIn, (req, res) => {
+        sortFilter.filter(req, res)
     })
 
     // =====================================

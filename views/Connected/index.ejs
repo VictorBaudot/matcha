@@ -1,109 +1,146 @@
 <% include index_header %>
-<div class="ui main container">
-<form action="" class="ui form">
-    <div class="field">
-        <span class="range-values">
-            <span id="age-value-lower"></span>
-            <span>-</span>
-            <span id="age-value-upper"></span>
-        </span>
-        <label>Age</label>
-        <div id="ageRange"></div>
-    </div>
-    <div class="field">
-        <span class="range-values">
-            <span id="distance-value-lower"></span>
-            <span>-</span>
-            <span id="distance-value-upper"></span>
-        </span>
-        <label>Distance (km)</label>
-        <div id="distanceRange"></div>
-    </div>
-    <div class="field">
-        <span class="range-values">
-            <span id="pop-value-lower"></span>
-            <span>-</span>
-            <span id="pop-value-upper"></span>
-        </span>
-        <label>Popularite</label>
-        <div id="popRange"></div>
-    </div>
-    <div class="field">
-        <label>Interets</label>
-        <div class="ui fluid multiple search selection dropdown">
-            <input name="interests" type="hidden">
-            <i class="dropdown icon"></i>
-            <div class="default text">Interets</div>
-            <div class="menu">
-                <% for (tag of tags) { %>
-                    <div class="item" data-value="<%= tag.interest %>"><%= tag.interest %></div>
-                <% } %>
-            </div>
+<div class="ui main container" style="margin-top: 3em;">
+    <div class="ui styled fluid accordion">
+        <div class="title" style="background-color:#00b5ad; text-align:center;">
+            <i class="dropdown icon" style="color:#fff"></i>
+            <span style="color:#fff">Filtrer et / ou trier les profils</span>
         </div>
-    </div>
+        <div class="content">
+            <p class="transition hidden">   
+                    <form onkeypress="return event.keyCode != 13;" action="/filter" method="POST" class="ui form">
+                        <div class="ui two column middle aligned very relaxed stackable grid">
+                            <div class="column">   
+                        <div class="field">
+                            <span class="range-values">
+                                <input id="age-lower0" name="ageL" type="hidden" value="<%= filters.age.l %>">
+                                <input id="age-upper0" name="ageU" type="hidden" value="<%= filters.age.u %>">
+                                <span id="age-lower"><%= filters.age.l %></span>
+                                <span>-</span>
+                                <span id="age-upper"><%= filters.age.u %></span>
+                            </span>
+                            <label>Age</label>
+                            <div id="ageRange"></div>
+                        </div>
+                        <div class="field">
+                            <span class="range-values">
+                                <input id="distance-lower0"  name="distanceL" type="hidden" value="<%= filters.dists.l %>">
+                                <input id="distance-upper0"  name="distanceU" type="hidden" value="<%= filters.dists.u %>">
+                                <span id="distance-lower"><%= filters.dists.l %></span>
+                                <span>-</span>
+                                <span id="distance-upper"><%= filters.dists.u %></span>
+                            </span>
+                            <label>Distance (km)</label>
+                            <div id="distanceRange"></div>
+                        </div>
+                        <div class="field">
+                            <span class="range-values">
+                                <input id="pop-lower0"  name="popL" type="hidden" value="<%= filters.pop.l %>">
+                                <input id="pop-upper0"  name="popU" type="hidden" value="<%= filters.pop.u %>">
+                                <span id="pop-lower"><%= filters.pop.l %></span>
+                                <span>-</span>
+                                <span id="pop-upper"><%= filters.pop.u %></span>
+                            </span>
+                            <label>Popularite</label>
+                            <div id="popRange"></div>
+                        </div>
+                        <div class="field">
+                            <label>Interets</label>
+                            <div class="ui fluid multiple search selection dropdown">
+                                <input name="interests" type="hidden" value="<%= filters.tags.join(',') %>">
+                                <i class="dropdown icon"></i>
+                                <div class="default text">Interets</div>
+                                <div class="menu">
+                                    <% for (tag of tags) { %>
+                                        <div class="item" data-value="<%= tag.interest %>"><%= tag.interest %></div>
+                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
 
-    <div class="four fields">
-        <div class="field"></div>
-        <div class="field">
-            <div class="ui fluid labeled teal icon centered submit button">
-                <i class="filter icon"></i>
-                <span class="text">Filtrer</span>
-            </div>
-        </div>
-        <div class="field">
-            <div class="ui fluid searchable dropdown labeled teal icon centered button">
-                <i class="sort icon"></i>
-                <span class="text">Trier</span>
-                <div class="menu">
-                    <div class="header">Trier par</div>
-                    <div class="item">
-                        <div class="ui red empty circular label"></div>
-                        Age
-                    </div>
-                    <div class="item">
-                        <div class="ui blue empty circular label"></div>
-                        Distance
-                    </div>
-                    <div class="item">
-                        <div class="ui black empty circular label"></div>
-                        Popularite
-                    </div>
+                        <div class="field">
+                            <button type="submit" class="ui fluid labeled teal icon centered submit button">
+                                <i class="filter icon"></i>
+                                <span class="text">Filtrer</span>
+                            </button>
+                        </div>
                 </div>
+                <div class="column">
+                        <div class="field">
+                            <label>Trier par</label>
+                            <div class="ui selection dropdown">
+                                <input type="hidden" name="sortType" value="<%= filters.sType %>">
+                                <i class="dropdown icon"></i>
+                                <div class="default text">Aucun</div>
+                                <div class="menu">
+                                    <div class="item" data-value="age">Age</div>
+                                    <div class="item" data-value="distance">Distance</div>
+                                    <div class="item" data-value="pop">Popularite</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label>Ordre</label>
+                            <div class="ui selection dropdown">
+                                <input type="hidden" name="sortOrder" value="<%= filters.sOrder %>">
+                                <i class="dropdown icon"></i>
+                                <div class="default text">Aucun</div>
+                                <div class="menu">
+                                    <div class="item" data-value="asc">Croissant</div>
+                                    <div class="item" data-value="desc">Decroissant</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="field">
+                                <button type="submit" class="ui fluid labeled teal icon centered submit button">
+                                    <i class="filter icon"></i>
+                                    <span class="text">Trier</span>
+                                </button>
+                            </div>
+                        </div>
+                </div>
+            </form>
             </div>
+            </p>
         </div>
-        <div class="field"></div>
     </div>
-</form>
 </div>
-<div class="ui main container"></div>
+<div class="ui main container" style="margin-top: 3em;"></div>
 <div class="ui link centered cards">
-    <% for (usr of users) { %>
+    <% let flag = true 
+    for (usr of users) {
+        if (filters.dists.l && filters.dists.u && usr.distance >= filters.dists.l && usr.distance <= filters.dists.u) { 
+            flag = false;%>
         <a class="teal card" href="/bg/<%= usr.login %>">
-                <div class="image">
-                    <img src="/assets/pics/<%= usr.pp %>">
-                </div>
-                <div class="content">
-                    <span class="right floated">
-                        <i class="favorite teal outline icon"></i>
-                        <span style="color:teal !important;"><%= usr.pop %></span>
-                    </span>
-                    <div class="header"><%= usr.prenom %> <%= usr.nom %></div>
-                    <div class="meta">
-                        <span class="date"><%= usr.age %></span>
-                    </div>
-                    <div class="description">
-                        <%= usr.bio %>
-                    </div>
-                </div>
-                <div class="extra content">
-                    <span class="right floated">
-                            <%= usr.localisation %>
+            <div class="image">
+                <img src="/assets/pics/<%= usr.pp %>">
+            </div>
+            <div class="content">
+                <span class="right floated">
+                    <i class="fire teal icon"></i>
+                    <span style="color:teal !important;"><%= usr.pop %></span>
+                </span>
+                <div class="header"><%= usr.prenom %> <%= usr.nom %><span style="font-weight:normal;">, <%= usr.age %></span></div>
+                <div class="meta">
+                    <span class="date">
+                        <%= Math.round(usr.distance) %> km
                     </span>
                 </div>
-            </a>
-    <% } %>   
+                <div class="description">
+                    <%= usr.bio %>
+                </div>
+            </div>
+            <div class="extra content">
+                <span class="right floated">
+                    <%= usr.interests %>
+                </span>
+            </div>
+        </a>
+    <% }%>
+<% } if (!users || flag == true) { %> <h1 class="ui">Aucun resultat...</h1> <% } %>
 </div>
 <script>
+    $('.ui.accordion').accordion();
     $('.ui.dropdown').dropdown();
     $('.ui.multiple.search.dropdown').dropdown({allowAdditions: true});
 
@@ -112,7 +149,7 @@
     var popRange = document.getElementById('popRange');
 
     noUiSlider.create(ageRange, {
-        start: [20, 40],
+        start: [<%= filters.age.l %>, <%= filters.age.u %>],
         connect: true,
         margin: 1,
         step: 1,
@@ -125,7 +162,7 @@
     });
 
     noUiSlider.create(distanceRange, {
-        start: [20, 60],
+        start: [<%= filters.dists.l %>, <%= filters.dists.u %>],
         connect: true,
         margin: 1,
         step: 0.5,
@@ -138,7 +175,7 @@
     });
 
     noUiSlider.create(popRange, {
-        start: [400, 800],
+        start: [<%= filters.pop.l %>, <%= filters.pop.u %>],
         connect: true,
         margin: 1,
         step: 1,
@@ -161,29 +198,47 @@
         } 
     });
 
+    var ageValues0 = [
+        document.getElementById('age-lower0'),
+        document.getElementById('age-upper0')
+    ];
+
     var ageValues = [
-        document.getElementById('age-value-lower'),
-        document.getElementById('age-value-upper')
+        document.getElementById('age-lower'),
+        document.getElementById('age-upper')
+    ];
+
+    var distanceValues0 = [
+        document.getElementById('distance-lower0'),
+        document.getElementById('distance-upper0')
     ];
 
     var distanceValues = [
-        document.getElementById('distance-value-lower'),
-        document.getElementById('distance-value-upper')
+        document.getElementById('distance-lower'),
+        document.getElementById('distance-upper')
+    ];
+
+    var popValues0 = [
+        document.getElementById('pop-lower0'),
+        document.getElementById('pop-upper0')
     ];
 
     var popValues = [
-        document.getElementById('pop-value-lower'),
-        document.getElementById('pop-value-upper')
+        document.getElementById('pop-lower'),
+        document.getElementById('pop-upper')
     ];
 
     ageRange.noUiSlider.on('update', function( values, handle ) {
-        ageValues[handle].innerHTML = values[handle];
+        ageValues0[handle].value = values[handle];
+        ageValues[handle].innerHTML = Math.round(values[handle]);
     });
     distanceRange.noUiSlider.on('update', function( values, handle ) {
-        distanceValues[handle].innerHTML = values[handle];
+        distanceValues0[handle].value = values[handle];
+        distanceValues[handle].innerHTML = Math.round(values[handle]);
     });
     popRange.noUiSlider.on('update', function( values, handle ) {
-        popValues[handle].innerHTML = values[handle];
+        popValues0[handle].value = values[handle];
+        popValues[handle].innerHTML = Math.round(values[handle]);
     });
 </script>
 <% include footer %>

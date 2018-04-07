@@ -19,16 +19,16 @@
   <script src="/assets/nouislider.min.js"></script>
 </head>
 <body>
-<div class="ui large inverted teal five item pointing menu" style="border-radius:0;">
-  <a href="/profile" class="header item <% if (title === 'Profil'){ %><%= 'active' %><% } %>">Profil</a>
-  <a href="/notifs" class="header item <% if (title === 'Notifs'){ %><%= 'active' %><% } %>">
-    Notifs
-    <div id="nb_notifs" class="ui teal basic left pointing label"><%= nb_notifs %></div>
-  </a>
-  <a href="/" class="header item <% if (title === 'Accueil'){ %><%= 'active' %><% } %>">Matcha</a>
-  <a href="/chats" class="header item <% if (title === 'Chats'){ %><%= 'active' %><% } %>">Chats</a>
-  <a href="/logout" class="header item">Deconnexion</a>
-</div>
+  <div class="ui large inverted teal five item pointing menu" style="border-radius:0;">
+    <a href="/profile" class="header item <% if (title === 'Profil'){ %><%= 'active' %><% } %>"><i class="user outline large icon"></i></a>
+    <a href="/notifs" class="header item <% if (title === 'Notifs'){ %><%= 'active' %><% } %>">
+      <i class="bullhorn large icon"></i>
+      <div id="nb_notifs" class="ui teal basic left pointing large label"><%= nb_notifs %></div>
+    </a>
+    <a href="/" class="header item <% if (title === 'Accueil'){ %><%= 'active' %><% } %>"><i class="search large icon"></i></a>
+    <a href="/chats" class="header item <% if (title === 'Chats'){ %><%= 'active' %><% } %>"><i class="comments outline large icon"></i></a>
+    <a href="/logout" class="header item"><i class="power off large icon"></i></a>
+  </div>
 <div class="ui fluid container">
     <%  if (locals.flash && locals.flash.tabSuccess) {
           for (id in locals.flash.tabSuccess) { %>

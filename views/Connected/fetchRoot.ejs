@@ -1,0 +1,31 @@
+<% let flag = true 
+    for (usr of users) {
+        if (filters.dists.l && filters.dists.u && usr.distance >= filters.dists.l && usr.distance <= filters.dists.u) { 
+            flag = false;%>
+        <a class="teal card" href="/bg/<%= usr.login %>">
+            <div class="image">
+                <img src="/assets/pics/<%= usr.pp %>">
+            </div>
+            <div class="content">
+                <span class="right floated">
+                    <i class="fire teal icon"></i>
+                    <span style="color:teal !important;"><%= usr.pop %></span>
+                </span>
+                <div class="header"><%= usr.prenom %> <%= usr.nom %><span style="font-weight:normal;">, <%= usr.age %></span></div>
+                <div class="meta">
+                    <span class="date">
+                        <%= Math.round(usr.distance) %> km
+                    </span>
+                </div>
+                <div class="description">
+                    <%= usr.bio %>
+                </div>
+            </div>
+            <div class="extra content">
+                <span class="right floated">
+                    <%= usr.interests %>
+                </span>
+            </div>
+        </a>
+    <% }
+      }%>

@@ -15,14 +15,13 @@ exports.notifs = (req, res) => {
       res.render("Connected/notifs.ejs", {user: req.user, notifs, nb_notifs: 0, title: 'Notifs'})
   }
 
-  connection.query("SELECT *, notifs.id as notifId FROM notifs, users WHERE users.id = user_id AND bg_id = ?", user.id, (err, rows) => {
+  connection.query("SELECT *, notifs.creation as sentat, notifs.id as notifId FROM notifs, users WHERE users.id = user_id AND bg_id = ? AND seen = 'N' ORDER BY sentat DESC", user.id, (err, rows) => {
       if (err) throw err;
       if (rows.length) {
           notifs = rows
           let msg = ''
           total = notifs.length
           notifs.forEach(notif => {
-
             switch(notif.type) {
                 case 'like':
                     msg = ' a like votre profil';
@@ -33,7 +32,7 @@ exports.notifs = (req, res) => {
                 case 'match':
                     msg = ' match avec vous';
                     break;
-                case 'unmatch':
+                case 'unlike':
                     msg = ' ne like plus votre profil';
                     break;
                 case 'message':
@@ -41,7 +40,7 @@ exports.notifs = (req, res) => {
                     break;
             }
             notif.msg = msg
-            notif.creation = capitalizeFirstLetter(moment(notif.creation).fromNow())
+            notif.sentat = capitalizeFirstLetter(moment(notif.sentat).fromNow())
 
             connection.query("UPDATE notifs SET seen = 'Y' WHERE id = ?", [notif.notifId], (err, rows) => {
                 if (err) throw err;
@@ -50,7 +49,7 @@ exports.notifs = (req, res) => {
                     displayNotifs()
             });
         })
-      }
+      } else displayNotifs()
   });
 
 

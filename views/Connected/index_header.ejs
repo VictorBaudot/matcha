@@ -17,8 +17,11 @@
   <script src="/socket.io/socket.io.js"></script>
   <script src="/assets/semantic/dist/semantic.min.js"></script>
   <script src="/assets/nouislider.min.js"></script>
+  <script src="https://unpkg.com/infinite-scroll@3/dist/infinite-scroll.pkgd.min.js"></script>
 </head>
 <body>
+    <div id="wrap">
+    <div id="main">
   <div class="ui large inverted teal five item pointing menu" style="border-radius:0;">
     <a href="/profile" class="header item <% if (title === 'Profil'){ %><%= 'active' %><% } %>"><i class="user outline large icon"></i></a>
     <a href="/notifs" class="header item <% if (title === 'Notifs'){ %><%= 'active' %><% } %>">
@@ -33,7 +36,7 @@
   </div>
 <div class="ui fluid container">
     <%  if (locals.flash && locals.flash.tabSuccess) { %>
-      <div class="ui main container" style="text-align:center">
+      <div class="ui container" style="text-align:center">
           <% for (id in locals.flash.tabSuccess) { %>
             <div class="ui positive message">
                 <%= locals.flash.tabSuccess[id] %>
@@ -41,7 +44,7 @@
         <% } %>
           </div>
         <% } if (locals.flash && locals.flash.tabError) { %>
-          <div class="ui main container" style="text-align:center">
+          <div class="ui container" style="text-align:center">
           
          <% for (id in locals.flash.tabError) { %>
             <div class="ui negative message">

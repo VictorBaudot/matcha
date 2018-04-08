@@ -89,20 +89,29 @@ io.on('connection', function(socket){
                         } else {
                             socket.emit('mymsg', message)
                             if (users[message.bg_id]) io.to(users[message.bg_id].socketid).emit('newmsg', message)
-                            connection.query('INSERT INTO notifs SET user_id = ?, type = ?, bg_id = ?, creation = ?', [
-                                message.user.id,
-                                'message',
-                                message.bg_id,
-                                new Date(message.creation)
-                            ], (err) => {
-                                if(err){
-                                    socket.emit('mybad', err.code)
-                                } else {
-                                    console.log("Destinataire notif: ")
-                                    console.log(users[message.bg_id])
-                                    if (users[message.bg_id]) io.to(users[message.bg_id].socketid).emit('notif', message)
+                            connection.query("SELECT * FROM notifs WHERE user_id = ? AND type = ? AND bg_id = ? ORDER BY creation DESC", [message.user.id, 'message', message.bg_id], (err, rows0) => {
+                                if (err) throw err;
+                                let datenow = new Date()
+                                let callit = () => {
+                                    connection.query('INSERT INTO notifs SET user_id = ?, type = ?, bg_id = ?, creation = ?', [
+                                        message.user.id,
+                                        'message',
+                                        message.bg_id,
+                                        new Date(message.creation)
+                                    ], (err) => {
+                                        if(err){
+                                            socket.emit('mybad', err.code)
+                                        } else {
+                                            console.log("Destinataire notif: ")
+                                            console.log(users[message.bg_id])
+                                            if (users[message.bg_id]) io.to(users[message.bg_id].socketid).emit('notif', message)
+                                        }
+                                    })
                                 }
-                            })
+                                if (rows0.length) {
+                                    if (rows0[0].creation.getTime() < datenow.getTime() - 600000) callit()
+                                } else callit()
+                            });
                         }
                     })
                 }
@@ -114,20 +123,36 @@ io.on('connection', function(socket){
         let user_id = infos.user_id
         let bg_id = infos.bg_id
         console.log(user_id+" - "+bg_id)
-        connection.query('INSERT INTO notifs SET user_id = ?, type = ?, bg_id = ?, creation = ?', [
-            user_id,
-            'visit',
-            bg_id,
-            new Date()
-        ], (err) => {
-            if(err){
-                socket.emit('mybad', err.code)
-            } else {
-                console.log("Destinataire notif: ")
-                console.log(users[bg_id])
-                if (users[bg_id]) io.to(users[bg_id].socketid).emit('notif', 'visit')
+        connection.query("SELECT * FROM notifs WHERE user_id = ? AND type = ? AND bg_id = ?", [user_id, 'visit', bg_id], (err, rows0) => {
+            if (err) throw err;
+            if (!rows0.length) {
+                connection.query('INSERT INTO notifs SET user_id = ?, type = ?, bg_id = ?, creation = ?', [
+                    user_id,
+                    'visit',
+                    bg_id,
+                    new Date()
+                ], (err) => {
+                    if(err){
+                        socket.emit('mybad', err.code)
+                    } else {
+                        connection.query("SELECT pop FROM users WHERE id = ?", [bg_id], (err, rows) => {
+                            if (err) throw err;
+                            if (rows.length) {
+                                connection.query("UPDATE users SET pop = ? WHERE id = ?",[rows[0].pop + 10, bg_id], (err) => {
+                                    if (err) return console.log(err);
+                                    else {
+                                        console.log("Destinataire notif: ")
+                                        console.log(users[bg_id])
+                                        if (users[bg_id]) io.to(users[bg_id].socketid).emit('notif', 'visit')
+                                    }
+                                })
+                            }
+                        });
+                    }
+                })
             }
-        })
+        });
+        
     })
 
     socket.on('like', (infos) => {
@@ -137,20 +162,52 @@ io.on('connection', function(socket){
 
         function addNotif(type) {
             console.log(type)
-            connection.query('INSERT INTO notifs SET user_id = ?, type = ?, bg_id = ?, creation = ?', [
-                user_id,
-                type,
-                bg_id,
-                new Date()
-            ], (err) => {
-                if(err){
-                    socket.emit('mybad', err.code)
-                } else {
-                    console.log("Destinataire notif: ")
-                    console.log(users[bg_id])
-                    if (users[bg_id]) io.to(users[bg_id].socketid).emit('notif', type)
-                }
-            })
+            if (type == 'like') {
+                connection.query("SELECT * FROM notifs WHERE user_id = ? AND type = ? AND bg_id = ?", [user_id, 'like', bg_id], (err, rows0) => {
+                    if (err) throw err;
+                    if (!rows0.length) {
+                        connection.query('INSERT INTO notifs SET user_id = ?, type = ?, bg_id = ?, creation = ?', [
+                            user_id,
+                            'like',
+                            bg_id,
+                            new Date()
+                        ], (err) => {
+                            if(err){
+                                socket.emit('mybad', err.code)
+                            } else {
+                                connection.query("SELECT pop FROM users WHERE id = ?", [bg_id], (err, rows) => {
+                                    if (err) throw err;
+                                    if (rows.length) {
+                                        connection.query("UPDATE users SET pop = ? WHERE id = ?",[rows[0].pop + 20, bg_id], (err) => {
+                                            if (err) return console.log(err);
+                                            else {
+                                                console.log("Destinataire notif: ")
+                                                console.log(users[bg_id])
+                                                if (users[bg_id]) io.to(users[bg_id].socketid).emit('notif', 'like')
+                                            }
+                                        })
+                                    }
+                                });
+                            }
+                        })
+                    }
+                });
+            } else {
+                connection.query('INSERT INTO notifs SET user_id = ?, type = ?, bg_id = ?, creation = ?', [
+                    user_id,
+                    type,
+                    bg_id,
+                    new Date()
+                ], (err) => {
+                    if(err){
+                        socket.emit('mybad', err.code)
+                    } else {
+                        console.log("Destinataire notif: ")
+                        console.log(users[bg_id])
+                        if (users[bg_id]) io.to(users[bg_id].socketid).emit('notif', type)
+                    }
+                })
+            }
         }
 
         function match () {

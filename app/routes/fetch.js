@@ -1,11 +1,12 @@
 const connection = require('../../config/db')
 
 exports.root = (req, res) => {
-    let user = req.user
-    let users, tags
+  let page = req.params.page;
+  console.log("Page: "+page)
+  let user = req.user
+    let users = []
     let count = 0
-    let total = 3
-    let nb_notifs = 0
+    let total = 1
     let filters = {
       age: {l: 20, u:40},
       dists: {l: 20, u:60},
@@ -14,16 +15,20 @@ exports.root = (req, res) => {
       sType: "",
       sOrder: ""
     }
-    let querySelect = fquerySelect(user, user.genre, user.orientation)+" ORDER BY pop DESC LIMIT 30"
+    let querySelect = fquerySelect(user, user.genre, user.orientation)+" ORDER BY pop DESC LIMIT 30 OFFSET "+ page * 30
 
-    displayProfile = () => {
-        res.render('Connected/index.ejs', {filters, tags, user, users, nb_notifs, title: 'Accueil', flagNoFilter: true})
+    let displayProfile = () => {
+      console.log("Nb users: " + users.length)
+      users.forEach(usr => {
+        console.log(usr.login)
+      })
+      res.render('Connected/fetchRoot.ejs', {filters, users})
     }
 
-    prepareDisplay = () => {
-      // console.log(querySelect)
+    let prepareDisplay = () => {
       connection.query(querySelect, user.id, (err, rows0) => {
         if (err) throw err;
+        if (rows0.length) {
         users = rows0
         let count2 = 0
         let total2 = users.length
@@ -43,25 +48,17 @@ exports.root = (req, res) => {
             }
           });
         })
+        } else displayProfile()
       });
-
-      connection.query("SELECT * FROM notifs WHERE bg_id = ? AND seen = 'N'", req.user.id, (err, rows) => {
-        if (err) throw err;
-        nb_notifs = rows.length
-        count++
-        if (count == total)
-          displayProfile()
-      });
-
-      connection.query("SELECT interest FROM tags", (err, rows) => {
-        if (err) throw err;
-        tags = rows
-        count++
-        if (count == total)
-            displayProfile()
-      });
-
     }
 
     prepareDisplay()
+}
+
+exports.notifs = (req, res) => {
+  
+}
+
+exports.chats = (req, res) => {
+  
 }

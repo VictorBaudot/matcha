@@ -106,7 +106,7 @@
     </div>
 </div>
 <div class="ui main container" style="margin-top: 3em;"></div>
-<div class="ui link centered cards">
+<div class="ui match-feed link centered cards">
     <% let flag = true 
     for (usr of users) {
         if (filters.dists.l && filters.dists.u && usr.distance >= filters.dists.l && usr.distance <= filters.dists.u) { 
@@ -139,10 +139,22 @@
     <% }%>
 <% } if (!users || flag == true) { %> <h1 class="ui">Aucun resultat...</h1> <% } %>
 </div>
+<% if (flagNoFilter && flagNoFilter == true) { %>
+<script>
+    $('.match-feed').infiniteScroll({
+        path: function() {
+            return '/fetch/root/' + ( this.loadCount + 1 );
+        },
+        append:'.card',
+        history: false
+    });
+</script>
+<% } %>
 <script>
     $('.ui.accordion').accordion();
     $('.ui.dropdown').dropdown();
     $('.ui.multiple.search.dropdown').dropdown({allowAdditions: true});
+    
 
     var distanceRange = document.getElementById('distanceRange');
     var ageRange = document.getElementById('ageRange');

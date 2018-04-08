@@ -61,12 +61,12 @@ exports.filter = (req, res) => {
         if (ok == false) users.splice(i--, 1) // i-- because users.length to big
       }
     }
-    res.render('Connected/index.ejs', {filters, tags, user, users, nb_notifs, title: 'Accueil'})
+    res.render('Connected/index.ejs', {filters, tags, user, users, nb_notifs, title: 'Accueil', flagNoFilter: false})
   }
 
   prepareDisplay = () => {
     console.log(querySelect)
-    connection.query(querySelect, (err, rows0) => {
+    connection.query(querySelect, user.id, (err, rows0) => {
       if (err) throw err;
       users = rows0
       let count2 = 0
@@ -111,7 +111,7 @@ exports.filter = (req, res) => {
 
 fquerySelect = (user, genre, orientation) => {
   let query = "SELECT *, ( 6371 * acos( cos( radians("+user.lat+") ) * cos( radians( lat ) ) * cos( radians( lng ) - radians("+user.lng+") ) + sin( radians("+user.lat+") ) * sin( radians( lat ) ) ) ) AS `distance` "
-  query += "FROM users WHERE ready = 1 AND "
+  query += "FROM users WHERE ready = 1 AND id != ? AND "
   if (genre === "Homme") {
     if (orientation === "Hetero") {
       query += "genre = 'Femme' AND (orientation = 'Hetero' OR orientation = 'Bi')"

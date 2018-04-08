@@ -10,12 +10,12 @@
                         if (i == 0) { %>
                             <a class="item active" data-tab="<%= bg.id %>">
                                 <img class="ui avatar image" src="/assets/pics/<%= bg.pp %>">
-                                <%= bg.prenom %> <%= bg.nom %>
+                                <%= bg.prenom %>
                             </a>
                         <% } else { %>
                             <a class="item" data-tab="<%= bg.id %>">
                                 <img class="ui avatar image" src="/assets/pics/<%= bg.pp %>">
-                                <%= bg.prenom %> <%= bg.nom %>
+                                <%= bg.prenom %>
                             </a>
                         <% } %>
                     <% i++;
@@ -59,6 +59,12 @@
         </div>
     <% } %>
 </div>
+</div>
+</div>
+</div>
+<footer>
+    <span>2018 © Matcha, by Victor Baudot</span>
+</footer>
 <script>
     $('.menu .item').tab();
 </script>
@@ -128,6 +134,5 @@
 
     startTchat(<%= user.id %>, "<%= user.token %>");
 </script>
-</div>
 </body>
 </html>

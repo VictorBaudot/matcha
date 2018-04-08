@@ -7,13 +7,20 @@ const notifs = require ('./routes/notifs')
 const sortFilter = require ('./routes/sortFilter')
 const forgot_pwd = require('./routes/forgot_pwd')
 const confirm = require('./routes/confirm')
+const fetch = require('./routes/fetch')
 const multer = require('multer')
 const path = require('path')
 
 module.exports = (app, passport) => {
 
     app.get('/', (req, res) => {
-        root.root(req, res)
+        if (req.isAuthenticated()) {
+            let user = req.user
+            if (user.ready == 0) {
+                req.flashAdd('tabSuccess', 'Complete ton profil avant de pouvoir aller matcher.')
+                res.redirect('/profile')
+            } else root.root(req, res)
+        } else res.render("NotConnected/index.ejs")
     })
 
     app.get('/confirm/:login/:token', (req, res) => {
@@ -47,7 +54,7 @@ module.exports = (app, passport) => {
     // SIGNIN ==============================
     // =====================================
     app.post('/signin', checkCredentials, passport.authenticate('local-signin', {
-        successRedirect: '/', // redirect to the secure profile section
+        successRedirect: '/profile', // redirect to the secure profile section
         failureRedirect: '/', // redirect back to the signup page if there is an error
         failureFlash: true, // allow flash messages
     }), ({ body, session }, res) => {
@@ -106,7 +113,14 @@ module.exports = (app, passport) => {
     // OTHERS PROFILES =====================
     // =====================================
     app.get('/bg/:login', isLoggedIn, (req, res) => {
-        profile.others(req, res)
+        let user = req.user
+        if (req.params.login == user.login) {
+            res.redirect('/profile')
+        }
+        if (user.ready == 0) {
+            req.flashAdd('tabSuccess', 'Complete ton profil avant de pouvoir aller matcher.')
+            res.redirect('/profile')
+        } else profile.others(req, res)
     })
 
     // =====================================
@@ -128,6 +142,11 @@ module.exports = (app, passport) => {
         req.logout();
         res.redirect('/');
     });
+
+    app.get('/fetch/root/:page', isLoggedIn, (req, res) => {
+        if (isNaN(req.params.page)) res.redirect('back')
+        else fetch.root(req, res)
+    })
 
     app.get('*', (req, res) => {
         res.redirect('/');

@@ -123,15 +123,32 @@ exports.modify_profile = (req, res) => {
         res.redirect('/profile')
     }
 
+    function checkReady (id) {
+        connection.query("SELECT * FROM users WHERE id = ?", id, (err, rows) => {
+            if (err) throw err;
+            let u = rows[0]
+            if (u.ready == 0) {
+                if (u.pp != "default.jpg" && u.age && u.localisation) {
+                    connection.query("UPDATE users SET ready = 1 WHERE id = ?",[id], (err, rows) => {
+                        if (err) return console.log(err);
+                        req.flashAdd('tabSuccess', 'Vous etes desormais pret a Matcher!')
+                        res.redirect('/profile')
+                    })
+                } else res.redirect('/profile')
+            }
+            else res.redirect('/profile')
+        });
+    }
+
     function modify () {
-    //        console.log(JSON.stringify(o, null, 4));
+    //  console.log(JSON.stringify(o, null, 4));
         if (Object.keys(o).length !== 0){
             let User = require('./../models/user')
             User.update(id, o, () => {
                 for (let i in o) {
-                    if (o[i] && i !== 'confirm' && i !== 'lat' && i !== 'lng') req.flashAdd('tabSuccess', i+' -> '+o[i]);
+                    if (o[i] && i !== 'confirm' && i !== 'lat' && i !== 'lng') req.flashAdd('tabSuccess', capitalizeFirstLetter(i)+' -> '+o[i]);
                 }
-                res.redirect('/profile')
+                checkReady(id)
             })
         } else res.redirect('/profile')
     }

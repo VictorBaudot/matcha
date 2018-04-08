@@ -16,9 +16,12 @@
   </style>
 </head>
 <body>
-<div class="ui large inverted teal one item pointing menu">
+<div id="wrap">
+  <div id="main">
+<div class="ui large inverted teal one item pointing menu" style="border-radius:0;">
   <a href="/" class="header item active">Matcha</a>
 </div>
+
 <div class="ui main container">
     <% if (locals.flash && locals.flash.tabError) {
         for (id in locals.flash.tabError) { %>

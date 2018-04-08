@@ -24,7 +24,7 @@ exports.profile = (req, res) => {
           displayProfile()
   })
 
-  connection.query("SELECT * FROM notifs WHERE bg_id = ?", req.user.id, (err, rows) => {
+  connection.query("SELECT * FROM notifs WHERE bg_id = ? AND seen = 'N'", req.user.id, (err, rows) => {
     if (err) throw err;
     nb_notifs = rows.length
     count++
@@ -192,7 +192,7 @@ exports.modify_profile = (req, res) => {
           res.render('Connected/bg', {infos_user, interests, liked, blocked, reported, user: req.user, nb_notifs, title: login})
       }
 
-      connection.query("SELECT * FROM notifs WHERE bg_id = ?", req.user.id, (err, rows) => {
+      connection.query("SELECT * FROM notifs WHERE bg_id = ? AND seen = 'N'", req.user.id, (err, rows) => {
           if (err) throw err;
           nb_notifs = rows.length
           count++

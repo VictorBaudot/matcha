@@ -7,9 +7,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
   <link rel="stylesheet" href="/assets/semantic/dist/semantic.min.css">
-  <link rel="stylesheet" href="/assets/style.css">
   <link rel="stylesheet" href="/assets/nouislider.min.css">
   <link rel="stylesheet" href="/assets/nouislider_perso.css">
+  <link rel="stylesheet" href="/assets/style.css">
   <script
     src="https://code.jquery.com/jquery-3.1.1.min.js"
     integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
@@ -23,24 +23,30 @@
     <a href="/profile" class="header item <% if (title === 'Profil'){ %><%= 'active' %><% } %>"><i class="user outline large icon"></i></a>
     <a href="/notifs" class="header item <% if (title === 'Notifs'){ %><%= 'active' %><% } %>">
       <i class="bullhorn large icon"></i>
-      <div id="nb_notifs" class="ui teal basic left pointing large label"><%= nb_notifs %></div>
+      <div class="displayNotifs">
+        <div id="nb_notifs" class="ui teal basic left pointing large label"><%= nb_notifs %></div>
+      </div>
     </a>
     <a href="/" class="header item <% if (title === 'Accueil'){ %><%= 'active' %><% } %>"><i class="search large icon"></i></a>
     <a href="/chats" class="header item <% if (title === 'Chats'){ %><%= 'active' %><% } %>"><i class="comments outline large icon"></i></a>
     <a href="/logout" class="header item"><i class="power off large icon"></i></a>
   </div>
 <div class="ui fluid container">
-    <%  if (locals.flash && locals.flash.tabSuccess) {
-          for (id in locals.flash.tabSuccess) { %>
+    <%  if (locals.flash && locals.flash.tabSuccess) { %>
+      <div class="ui main container" style="text-align:center">
+          <% for (id in locals.flash.tabSuccess) { %>
             <div class="ui positive message">
                 <%= locals.flash.tabSuccess[id] %>
             </div>
-        <% }
-        }
-        if (locals.flash && locals.flash.tabError) {
-          for (id in locals.flash.tabError) { %>
+        <% } %>
+          </div>
+        <% } if (locals.flash && locals.flash.tabError) { %>
+          <div class="ui main container" style="text-align:center">
+          
+         <% for (id in locals.flash.tabError) { %>
             <div class="ui negative message">
                 <%= locals.flash.tabError[id] %>
             </div>
-          <% }
-        }%>
+          <% } %>
+        </div>
+        <% } %>

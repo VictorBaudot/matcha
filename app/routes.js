@@ -5,7 +5,8 @@ const profile = require ('./routes/profile')
 const root = require ('./routes/root')
 const notifs = require ('./routes/notifs')
 const sortFilter = require ('./routes/sortFilter')
-
+const forgot_pwd = require('./routes/forgot_pwd')
+const confirm = require('./routes/confirm')
 const multer = require('multer')
 const path = require('path')
 
@@ -14,9 +15,17 @@ module.exports = (app, passport) => {
     app.get('/', (req, res) => {
         root.root(req, res)
     })
+
+    app.get('/confirm/:login/:token', (req, res) => {
+        confirm(req, res)
+    })
     
     app.get('/forgot_pwd', (req, res) => {
         notConnected.forgot_pwd(req, res)
+    })
+
+    app.post('/forgot_pwd', (req, res) => {
+        forgot_pwd(req, res)
     })
 
     app.post('/filter', isLoggedIn, (req, res) => {

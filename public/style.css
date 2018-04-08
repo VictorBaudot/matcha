@@ -1,3 +1,7 @@
 .main.container{
     margin-top: 7em;
 }
+
+.displayNotifs {
+    display:none;
+}

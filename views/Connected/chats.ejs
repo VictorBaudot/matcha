@@ -66,6 +66,7 @@
 <script>
     var startTchat;
     var nb_notifs = <%= nb_notifs %>;
+    if (nb_notifs > 0) $('.displayNotifs').css('display', 'block');
 
     (function($) {
         var socket = io.connect('http://127.0.0.1:6969');
@@ -107,7 +108,8 @@
             console.log("Notif: ")
             console.log(notif)
             nb_notifs++
-            $('#nb_notifs').text(nb_notifs)
+            if ($('.displayNotifs').css('display') == 'none') $('.displayNotifs').css('display', 'block');
+            $('#nb_notifs').text(nb_notifs);
         })
 
         socket.on('mymsg', (message) => {

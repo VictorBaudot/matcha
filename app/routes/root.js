@@ -46,7 +46,7 @@ exports.root = (req, res) => {
         })
       });
 
-      connection.query("SELECT * FROM notifs WHERE bg_id = ?", req.user.id, (err, rows) => {
+      connection.query("SELECT * FROM notifs WHERE bg_id = ? AND seen = 'N'", req.user.id, (err, rows) => {
         if (err) throw err;
         nb_notifs = rows.length
         count++

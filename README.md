@@ -11,9 +11,11 @@ We will be using Passport to authenticate users locally
 If you would like to download the code and try it for yourself:
 
 1. Clone the repo: `git clone git@github.com:VictorBaudot/matcha.git`
-1. Install packages: `npm install`
-1. Edit the database configuration: `config/database.js`
-1. Create the database schema: `node scripts/create_database.js`
-1. Launch: `npm start`
-1. Visit in your browser at: `http://localhost:6969`
+2. Install packages: `npm install`
+3. Edit the database configuration: `config/database.js`
+4. Create data schema: `node scripts/main.js`
+5. Add fake profiles: `node scripts/seed.js 500`
+6. Install and launch maildev to get all emails sent from the app: `npm i -g maildev && maildev`
+7. Launch: `npm start`
+8. Visit in your browser at: `http://localhost:6969`
 

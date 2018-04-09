@@ -1,5 +1,8 @@
 <div class="ui teal centered card" style="width:500px; margin-top:30px;">
     <div class="ui image">
+        <%  if (infos_user.online == 1) { %>
+            <a id="online" class="ui teal right ribbon label" style="z-index:99">En ligne</a>
+        <% } %>
         <div class="ui shape">
             <div class="sides">
                 <div class="side active">
@@ -39,9 +42,3 @@
         </span>
     </div>
 </div>
-
-<script>
-    $('.side').click(() => {
-        $('.shape').shape('flip right');
-    })
-</script>

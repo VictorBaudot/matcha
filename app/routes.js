@@ -10,6 +10,7 @@ const confirm = require('./routes/confirm')
 const fetch = require('./routes/fetch')
 const multer = require('multer')
 const path = require('path')
+const connection = require('./../config/db')
 
 module.exports = (app, passport) => {
 
@@ -138,9 +139,13 @@ module.exports = (app, passport) => {
     // =====================================
     // LOGOUT ==============================
     // =====================================
-    app.get('/logout', (req, res) => {
-        req.logout();
-        res.redirect('/');
+    app.get('/logout', isLoggedIn, (req, res) => {
+        console.log("Logout: "+req.user.login)
+        connection.query("UPDATE users SET online = 0 WHERE login = ?", [req.user.login], (err, rows2) => {
+            if (err) return console.log(err);
+            req.logout();
+            res.redirect('/');
+        })
     });
 
     app.get('/fetch/root/:page', isLoggedIn, (req, res) => {

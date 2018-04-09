@@ -44,6 +44,19 @@
                             <div id="popRange"></div>
                         </div>
                         <div class="field">
+                            <label>Connecte</label>
+                            <div class="ui selection dropdown">
+                                <input type="hidden" name="etat" value="<%= filters.etat %>">
+                                <i class="dropdown icon"></i>
+                                <div class="default text">Peu importe</div>
+                                <div class="menu">
+                                    <div class="item" data-value="online">Oui</div>
+                                    <div class="item" data-value="disconnected">Non</div>
+                                    <div class="item" data-value="all">Peu importe</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field">
                             <label>Interets</label>
                             <div class="ui fluid multiple search selection dropdown">
                                 <input name="interests" type="hidden" value="<%= filters.tags.join(',') %>">
@@ -107,12 +120,15 @@
 </div>
 <div class="ui main container" style="margin-top: 3em;"></div>
 <div class="ui match-feed link centered cards">
-    <% let flag = true 
+    <% let flag = true;
     for (usr of users) {
-        if (filters.dists.l && filters.dists.u && usr.distance >= filters.dists.l && usr.distance <= filters.dists.u) { 
+        if (usr.distance >= filters.dists.l && usr.distance <= filters.dists.u) {
             flag = false;%>
-        <a class="teal card" href="/bg/<%= usr.login %>">
-            <div class="image">
+        <a id="cardMargin" class="ui teal card" href="/bg/<%= usr.login %>">
+            <div class="ui image">
+                <%  if (usr.online == 1) { %>
+                    <span id="online" class="ui teal right ribbon label" style="z-index:99">En ligne</span>
+                <% } %>
                 <img src="/assets/pics/<%= usr.pp %>">
             </div>
             <div class="content">

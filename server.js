@@ -54,18 +54,26 @@ io.on('connection', function(socket){
                 };
                 // console.log(me)
                 socket.emit('logged');
+                socket.broadcast.emit('online', me.username)
                 users[me.id] = me;
             } else {
                 socket.emit('mybad', {error: 'Aucun utilisateur ne correspond'});
             }
         })
     })
+    socket.on('disconnect', function(){
+        // console.log('user disconnected');
+    });
+
+    const chatRegex = new RegExp("^[a-zA-Z0-9_\ +-]{2,40}$");
 
     socket.on('newmsg', (message) => {
         if(message.message === '' || me.id === undefined) {
             socket.emit('mybad', 'Vous ne pouvez pas envoyer un message vide')
         } else if (me.id === undefined){
             socket.emit('mybad', 'Vous devez être identifié pour envoyer un message')
+        } else if (!chatRegex.test(message.message)){
+            socket.emit('mybad', 'Format du message incorrect')
         } else {
             message.user = me;
             connection.query('SELECT * FROM matchs WHERE user_id = ? AND bg_id = ?', [

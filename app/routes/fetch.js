@@ -15,7 +15,7 @@ exports.root = (req, res) => {
       sType: "",
       sOrder: ""
     }
-    let querySelect = fquerySelect(user, user.genre, user.orientation)+" ORDER BY pop DESC LIMIT 30 OFFSET "+ page * 30
+    let querySelect = fquerySelect(user, user.genre, user.orientation)+" ORDER BY pop DESC LIMIT 30 OFFSET ?"
 
     let displayProfile = () => {
       console.log("Nb users: " + users.length)
@@ -26,7 +26,8 @@ exports.root = (req, res) => {
     }
 
     let prepareDisplay = () => {
-      connection.query(querySelect, user.id, (err, rows0) => {
+      console.log(querySelect)
+      connection.query(querySelect, [user.id, user.id, page*30], (err, rows0) => {
         if (err) throw err;
         if (rows0.length) {
         users = rows0

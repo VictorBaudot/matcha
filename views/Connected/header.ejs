@@ -30,17 +30,19 @@
   <a href="/chats" class="header item <% if (title === 'Chats'){ %><%= 'active' %><% } %>"><i class="comments outline large icon"></i></a>
   <a href="/logout" class="header item"><i class="power off large icon"></i></a>
 </div>
-<div class="ui main container">
+<div id="padBot" class="ui main container">
+    <div id="negativeMsg" class="ui container">
+    </div>
     <%  if (locals.flash && locals.flash.tabSuccess) {
           for (id in locals.flash.tabSuccess) { %>
-            <div class="ui positive message">
+            <div class="ui positive message" style="text-align:center; margin: 10px;">
                 <%= locals.flash.tabSuccess[id] %>
             </div>
         <% }
         }
         if (locals.flash && locals.flash.tabError) {
           for (id in locals.flash.tabError) { %>
-            <div class="ui negative message">
+            <div class="ui negative message" style="text-align:center; margin: 10px;">
                 <%= locals.flash.tabError[id] %>
             </div>
           <% }

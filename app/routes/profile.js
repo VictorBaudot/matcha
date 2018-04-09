@@ -144,6 +144,13 @@ exports.modify_profile = (req, res) => {
     //  console.log(JSON.stringify(o, null, 4));
         if (Object.keys(o).length !== 0){
             let User = require('./../models/user')
+            console.log(o)
+            if (!o.localisation || !o.lat || !o.lng ) {
+                if (o.localisation) delete o.localisation
+                if (o.lat) delete o.lat
+                if (o.lng) delete o.lng
+            }
+            console.log(o)
             User.update(id, o, () => {
                 for (let i in o) {
                     if (o[i] && i !== 'confirm' && i !== 'lat' && i !== 'lng') req.flashAdd('tabSuccess', capitalizeFirstLetter(i)+' -> '+o[i]);
@@ -173,8 +180,8 @@ exports.modify_profile = (req, res) => {
             })
         } else Check[i](params[i], req, (check) => {
             if (check === true) {
-            if (i === "prenom" || i === "nom") o[i] = capitalizeFirstLetter(params[i])
-            else o[i] = params[i]
+                if (i === "prenom" || i === "nom") o[i] = capitalizeFirstLetter(params[i])
+                else o[i] = params[i]
             }
             count++
             if (count === total) {
@@ -263,7 +270,7 @@ exports.modify_profile = (req, res) => {
                   if (err) throw err;
                   let tab = []
                   rows.forEach(row => {
-                      tab.push(row.interest)
+                      tab.push('#'+row.interest)
                   });
                   interests = tab.join(', ')
                   hasVisited(infos_user.id)

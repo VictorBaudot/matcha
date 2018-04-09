@@ -5,6 +5,18 @@
   <span>2018 © Matcha, by Victor Baudot</span>
 </footer>
 <script>
+    let i = 0
+    $('.side').click(() => {
+        if (i == 0) {
+            $('#online').hide()
+            i++
+        }
+        else if (i == 2) {
+            $('#online').fadeIn(500)
+            i = 0
+        } else i++
+        $('.shape').shape('flip right');
+    })
     var startTchat;
     var nb_notifs = <%= nb_notifs %>;
     var title = "<%= title %>";
@@ -37,6 +49,10 @@
 
         socket.on('logged', () => {
             console.log("LOGGED IN -> SUCCESS")
+        })
+
+        socket.on('online', (login) => {
+            console.log(login + " is connected")
         })
 
         socket.on('mybad', (error) => {

@@ -3,6 +3,8 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const nomRegex = new RegExp("^[a-zA-Z]{3,16}$");
 const loginRegex = new RegExp("^[a-zA-Z0-9_]{3,16}$");
 const interestRegex = new RegExp("^[a-zA-Z0-9_]{2,18}$");
+const bioRegex = new RegExp("^[a-zA-Z0-9\p{L}_,#\ +-]{2,50}$");
+const latlngRegex = new RegExp("^-?[0-9]{1,3}(?:\.[0-9]{1,20})?$")
 
 var Check = {
 
@@ -113,13 +115,15 @@ var Check = {
     // - Taille correcte
     bio: bio = (bio, req, cb) => {
         let rep = true
-        if (!isLengthOkay("Bio", bio, req)) rep = false
+        if (!bioRegex.test(bio)) {
+            req.flashAdd('tabError', 'Bio: format incorrect')
+            rep = false
+        }
         cb(rep)
     },
 
     interests: interests = (interests, req, cb) => {
         let rep = true
-        console.log("Checks\n")
         let tab = interests.split(',')
         tab.forEach(tag => {
             if (!interestRegex.test(tag)) {
@@ -133,14 +137,28 @@ var Check = {
 
     localisation: localisation = (localisation, req, cb) => {
         let rep = true
+        if (!bioRegex.test(localisation)) {
+            req.flashAdd('tabError', 'Localisation: format incorrect')
+            rep = false
+        }
         cb(rep)
     },
+
     lat: lat = (lat, req, cb) => {
         let rep = true
+        if (!latlngRegex.test(lat)) {
+            req.flashAdd('tabError', 'Latitude: format incorrect')
+            rep = false
+        }
         cb(rep)
     },
+
     lng: lng = (lng, req, cb) => {
         let rep = true
+        if (!latlngRegex.test(lng)) {
+            req.flashAdd('tabError', 'Longitude: format incorrect')
+            rep = false
+        }
         cb(rep)
     }
 }

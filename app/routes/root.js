@@ -7,22 +7,24 @@ exports.root = (req, res) => {
     let total = 3
     let nb_notifs = 0
     let filters = {
-      age: {l: 20, u:40},
-      dists: {l: 20, u:60},
-      pop: {l: 400, u:800},
+      age: {l: 16, u:80},
+      dists: {l: 0, u:100},
+      pop: {l: 0, u:1000},
       tags: [],
-      sType: "",
-      sOrder: ""
+      sType: "pop",
+      sOrder: "desc",
+      etat: ""
     }
     let querySelect = fquerySelect(user, user.genre, user.orientation)+" ORDER BY pop DESC LIMIT 30"
 
     displayProfile = () => {
-        res.render('Connected/index.ejs', {filters, tags, user, users, nb_notifs, title: 'Accueil', flagNoFilter: true})
+      // users.forEach(usr => {console.log(usr.login)})
+      res.render('Connected/index.ejs', {filters, tags, user, users, nb_notifs, title: 'Accueil', flagNoFilter: true})
     }
 
     prepareDisplay = () => {
-      // console.log(querySelect)
-      connection.query(querySelect, user.id, (err, rows0) => {
+      console.log(querySelect)
+      connection.query(querySelect, [user.id, user.id], (err, rows0) => {
         if (err) throw err;
         users = rows0
         let count2 = 0

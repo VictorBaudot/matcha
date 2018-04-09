@@ -2,8 +2,11 @@
     for (usr of users) {
         if (filters.dists.l && filters.dists.u && usr.distance >= filters.dists.l && usr.distance <= filters.dists.u) { 
             flag = false;%>
-        <a class="teal card" href="/bg/<%= usr.login %>">
-            <div class="image">
+        <a class="ui teal card" href="/bg/<%= usr.login %>">
+            <div class="ui image">
+                <%  if (usr.online == 1) { %>
+                    <span id="online" class="ui teal right ribbon label" style="z-index:99">En ligne</span>
+                <% } %>
                 <img src="/assets/pics/<%= usr.pp %>">
             </div>
             <div class="content">

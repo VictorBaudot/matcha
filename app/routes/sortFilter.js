@@ -9,14 +9,15 @@ exports.filter = (req, res) => {
   let sType = req.body.sortType
   let sOrder = req.body.sortOrder
   let filters = {
-    age: {l: 20, u:40},
-    dists: {l: 20, u:60},
-    pop: {l: 400, u:800},
+    age: {l: 16, u:80},
+    dists: {l: 0, u:100},
+    pop: {l: 0, u:1000},
     tags: [],
     sType: "",
-    sOrder: ""
+    sOrder: "",
+    etat: ""
   }
-  let {ageL, ageU, distanceL, distanceU, popL, popU, interests} = req.body
+  let {ageL, ageU, distanceL, distanceU, popL, popU, etat, interests} = req.body
   let querySelect = fquerySelect(user, user.genre, user.orientation)
   
   console.log(req.body)
@@ -35,8 +36,33 @@ exports.filter = (req, res) => {
     filters.dists.l = distanceL
     filters.dists.u = distanceU
   }
+  if (etat && (etat === "all" || etat === "online" || etat === "disconnected")) {
+    if (etat === "all" ) filters.etat = "Peu importe"
+    else if (etat === "online" ) {
+      filters.etat = "Oui"
+      querySelect += " AND online = 1 "
+    } else if (etat === "disconnected" ) {
+      filters.etat = "Non"
+      querySelect += " AND online = 0 "
+    }
+  }
   if (interests) {
-    filters.tags = req.body.interests.split(',')
+    total++
+    filters.tags = interests.split(',')
+    connection.query("SELECT * from tags", (err, rows) => {
+      let tabTags = []
+      rows.forEach(tag => {
+        tabTags.push(tag.interest)
+      })
+      // console.log(tabTags)
+      for (let i = 0; i < filters.tags.length; i++) {
+        if (!tabTags.includes(filters.tags[i])) filters.tags.splice(i--, 1)
+      }
+      console.log(filters.tags)
+      count++
+      if (count == total)
+        displayProfile()
+    })
   }
 
   if (sType && (sType === "age" || sType === "pop" || sType === "distance")) {
@@ -48,7 +74,8 @@ exports.filter = (req, res) => {
     }
   }
 
-  displayProfile = () => {
+  function displayProfile() {
+    //users.forEach(usr => {console.log(usr.interests)})
     if (filters.tags) {
       let ok = true
       let tab = []
@@ -56,7 +83,7 @@ exports.filter = (req, res) => {
         ok = true
         tab = users[i].interests.split(', ')
         filters.tags.forEach( filter => {
-          if (!tab.includes(filter)) ok = false
+          if (!tab.includes('#'+filter)) ok = false
         })
         if (ok == false) users.splice(i--, 1) // i-- because users.length to big
       }
@@ -66,7 +93,7 @@ exports.filter = (req, res) => {
 
   prepareDisplay = () => {
     console.log(querySelect)
-    connection.query(querySelect, user.id, (err, rows0) => {
+    connection.query(querySelect, [user.id, user.id], (err, rows0) => {
       if (err) throw err;
       users = rows0
       let count2 = 0
@@ -111,7 +138,7 @@ exports.filter = (req, res) => {
 
 fquerySelect = (user, genre, orientation) => {
   let query = "SELECT *, ( 6371 * acos( cos( radians("+user.lat+") ) * cos( radians( lat ) ) * cos( radians( lng ) - radians("+user.lng+") ) + sin( radians("+user.lat+") ) * sin( radians( lat ) ) ) ) AS `distance` "
-  query += "FROM users WHERE ready = 1 AND id != ? AND "
+  query += "FROM users WHERE id NOT IN (SELECT bg_id FROM blocks WHERE user_id = ?) AND ready = 1 AND id != ? AND "
   if (genre === "Homme") {
     if (orientation === "Hetero") {
       query += "genre = 'Femme' AND (orientation = 'Hetero' OR orientation = 'Bi')"

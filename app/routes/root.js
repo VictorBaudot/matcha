@@ -15,7 +15,7 @@ exports.root = (req, res) => {
       sOrder: "desc",
       etat: ""
     }
-    let querySelect = fquerySelect(user, user.genre, user.orientation)+" ORDER BY pop DESC LIMIT 30"
+    let querySelect = fquerySelect(user, user.genre, user.orientation)+" ORDER BY pop DESC, distance ASC LIMIT 30"
 
     displayProfile = () => {
       // users.forEach(usr => {console.log(usr.login)})

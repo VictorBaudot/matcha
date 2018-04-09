@@ -15,7 +15,7 @@ exports.root = (req, res) => {
       sType: "",
       sOrder: ""
     }
-    let querySelect = fquerySelect(user, user.genre, user.orientation)+" ORDER BY pop DESC LIMIT 30 OFFSET ?"
+    let querySelect = fquerySelect(user, user.genre, user.orientation)+" ORDER BY pop DESC, distance ASC LIMIT 30 OFFSET ?"
 
     let displayProfile = () => {
       console.log("Nb users: " + users.length)

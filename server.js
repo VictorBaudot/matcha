@@ -207,7 +207,7 @@ io.on('connection', function(socket){
                     bg_id,
                     new Date()
                 ], (err) => {
-                    if(err){
+                    if (err) {
                         socket.emit('mybad', err.code)
                     } else {
                         console.log("Destinataire notif: ")

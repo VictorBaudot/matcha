@@ -11,11 +11,21 @@
                             <a class="item active" data-tab="<%= bg.id %>">
                                 <img class="ui avatar image" src="/assets/pics/<%= bg.pp %>">
                                 <%= bg.prenom %>
+                                <%  if (bg.online == 1) { %>
+                                    <span class="ui teal empty circular label"></span>
+                                <% } else { %>
+                                    <span class="ui grey empty circular label"></span>
+                                <% } %>
                             </a>
                         <% } else { %>
                             <a class="item" data-tab="<%= bg.id %>">
                                 <img class="ui avatar image" src="/assets/pics/<%= bg.pp %>">
                                 <%= bg.prenom %>
+                                <%  if (bg.online == 1) { %>
+                                    <span class="ui teal empty circular label"></span>
+                                <% } else { %>
+                                    <span class="ui grey empty circular label"></span>
+                                <% } %>
                             </a>
                         <% } %>
                     <% i++;
@@ -33,7 +43,7 @@
                         <% } %>
                                 <div id="msgform<%= bg.id %>" class="ui form" style="margin-bottom:1rem;">
                                     <input type="text" id="bg" value="<%= bg.id %>" hidden />
-                                    <div class="field"><input type="text" id="m" placeholder="Dit bonjour, ne soit pas timide ;)" autofocus></div>
+                                    <div class="field"><input type="text" id="m" placeholder="Blabla..." autofocus></div>
                                     </div>
                                 <div id="messages<%= bg.id %>" class="ui grid" >
                                     <% messages.forEach(msg => { %>

@@ -1,5 +1,6 @@
 <% include index_header %>
 <div class="ui main container" style="text-align:center">
+<%  if (!blocked && !reported) { %>
 <input type="text" value="<%= infos_user.id %>" id="like_bg_id" hidden>
 <button id="like" class="ui red large button" style="margin-bottom: 16px;">
 <%  if (!liked) { %>
@@ -8,15 +9,27 @@
     <i class="heartbeat icon"></i><span id="text">Ne plus liker</span>
 <% } %>
 </button>
-<div class="ui teal centered card" style="width:500px; text-align:justify;">
+<% } %>
+<div class="ui teal centered card" style="text-align:justify;">
     <div class="ui image">
+        <%  if (liked_me) { %>
+        <a class="online ui red left corner label">
+            <i class="heart icon"></i>
+        </a>
+        <% } %>
         <%  if (infos_user.online == 1) { %>
-            <a id="online" class="ui teal right ribbon label" style="z-index:99">En ligne</a>
+            <a class="online ui teal right ribbon label" style="z-index:99">En ligne</a>
+        <% } else { %>
+            <a class="online ui grey right ribbon label" style="z-index:99"><%= infos_user.last_visit %></a>
         <% } %>
         <div class="ui shape">
             <div class="sides">
-                <div class="side active">
-                    <img src="/assets/pics/<%= infos_user.pp %>">
+                <div id="parentimg" class="side active">
+                    <img id="backimg" src="/assets/pics/<%= infos_user.pp %>">
+                    <%  if (blocked) { %><img id="overimg" src="/assets/pics/block.png">
+                    <%  } else if (reported) { %><img id="overimg" src="/assets/pics/report.png">
+                    <%  } else if (matched) { %><img id="overimg" src="/assets/pics/match.png">
+                    <%  } else if (liked) { %><img id="overimg" src="/assets/pics/like.png"><% } %>
                 </div>
                 <div class="side">
                     <img src="/assets/pics/<%= infos_user.p2 %>">

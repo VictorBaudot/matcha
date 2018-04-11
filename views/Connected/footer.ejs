@@ -8,11 +8,11 @@
     let i = 0
     $('.side').click(() => {
         if (i == 0) {
-            $('#online').hide()
+            $('.online').hide()
             i++
         }
         else if (i == 2) {
-            $('#online').fadeIn(500)
+            $('.online').fadeIn(500)
             i = 0
         } else i++
         $('.shape').shape('flip right');
@@ -43,8 +43,15 @@
                 user_id: <%= user.id %>,
                 bg_id: $('#like_bg_id').val()
             })
-            if ($('#like #text').text() === "Liker") $('#like #text').text("Ne plus liker")
-            else $('#like #text').text("Liker")
+            if ($('#like #text').text() === "Liker"){
+                $('#like #text').text("Ne plus liker")
+                $('#parentimg').find("#overimg").remove()
+                $('#parentimg').append('<img id="overimg" src="/assets/pics/like.png">')
+            }
+            else {
+                $('#parentimg').find("#overimg").remove()
+                $('#like #text').text("Liker")
+            }
         })
 
         socket.on('logged', () => {
@@ -56,7 +63,7 @@
         })
 
         socket.on('mybad', (error) => {
-            console.error(error)
+            if (error) console.log(error)
         })
 
         socket.on('connect_error', function() {

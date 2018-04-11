@@ -105,7 +105,7 @@ generateUsers = (nb) => {
     let { latitude, longitude } = randomLocation.randomCirclePoint(P, R)
     let prenom = faker.name.firstName()
     let guessedGender = gender.guess(prenom).gender == 'male' ? 'Homme' : 'Femme';
-    let login = faker.internet.userName() + Math.floor(Math.random() * 99)
+    let login = faker.internet.userName() + Math.floor(Math.random() * 2313)
     let genre = guessedGender
     let interests = getTags(Math.floor((Math.random() * 4) + 1))
 
@@ -116,7 +116,8 @@ generateUsers = (nb) => {
         nom: faker.name.lastName(),
         email: faker.internet.email(),
         password: bcrypt.hashSync('Root00', bcrypt.genSaltSync(9)),
-        creation: faker.date.between('1977-01-01', '2018-01-01'),
+        creation: faker.date.between('1987-01-01', '2018-04-04'),
+        last_visit: faker.date.between('1987-01-01', '2018-04-04'),
         active: 1,
         ready: 1,
         pop: Math.floor(Math.random() * 1000),

@@ -3,7 +3,7 @@ const connection = require('../../config/db')
 exports.chats = (req, res) => {
     let login = req.user.login
     let user = req.user
-    let matchs, messages
+    let matchs = [], messages = []
     let User = require('./../models/user')
     let count = 0
     let total = 3

@@ -24,28 +24,28 @@
     <div class="fields">
         <div class="field">
             <label>Pseudo</label>
-            <input type="text" placeholder="Pseudo" name="login">
+            <input type="text" placeholder="<%= infos_user.login %>" name="login">
         </div>
         <div class="field">
             <label>Prenom</label>
-            <input type="text" placeholder="Prenom" name="prenom">
+            <input type="text" placeholder="<%= infos_user.prenom %>" name="prenom">
         </div>
         <div class="field">
             <label>Nom</label>
-            <input type="text" placeholder="Nom" name="nom">
+            <input type="text" placeholder="<%= infos_user.nom %>" name="nom">
         </div>
     </div>
 
     <div class="fields">
         <div class="field">
             <label>Age</label>
-            <input type="number" placeholder="24" min="16" max="80" value="" name="age">
+            <input type="number" placeholder="<%= infos_user.age %>" min="16" max="80" value="" name="age">
         </div>
         <div class="field">
             <label>Localisation</label>
             <input type="text" id="lat" name="lat" hidden/>
             <input type="text" id="lng" name="lng" hidden/>
-            <input type="text" id="txtPlaces" placeholder="Localisation" name="localisation"/>
+            <input type="text" id="txtPlaces" placeholder="<%= infos_user.localisation %>" name="localisation"/>
         </div>
     </div>
 
@@ -55,7 +55,7 @@
             <div class="ui selection dropdown">
                 <input type="hidden" name="genre">
                 <i class="dropdown icon"></i>
-                <div class="default text">Genre</div>
+                <div class="default text"><%= infos_user.genre %></div>
                 <div class="menu">
                     <div class="item" data-value="Homme">Homme</div>
                     <div class="item" data-value="Femme">Femme</div>
@@ -67,7 +67,7 @@
             <div class="ui selection dropdown">
                 <input type="hidden" name="orientation">
                 <i class="dropdown icon"></i>
-                <div class="default text">Orientation</div>
+                <div class="default text"><%= infos_user.orientation %></div>
                 <div class="menu">
                     <div class="item" data-value="Bi">Bi</div>
                     <div class="item" data-value="Hetero">Hetero</div>
@@ -79,15 +79,15 @@
 
     <div class="field">
         <label>Bio</label>
-        <textarea rows="2" placeholder="Blabla..." name="bio"></textarea>
+        <textarea rows="2" placeholder="<%= infos_user.bio %>" name="bio"></textarea>
     </div>
 
     <div class="field">
         <label>Interets</label>
-        <div class="ui fluid multiple search selection dropdown">
+        <div class="ui fluid multiple search selection dropdown" placeholder="<%= interests %>">
             <input name="interests" type="hidden">
             <i class="dropdown icon"></i>
-            <div class="default text">Interets</div>
+            <div class="default text"><%= interests %></div>
             <div class="menu">
                 <% for (tag of tags) { %>
                         <div class="item" data-value="<%= tag.interest %>"><%= tag.interest %></div>
@@ -98,7 +98,7 @@
 
     <div class="field">
         <label>E-mail</label>
-        <input type="email" placeholder="batman@arkham.city" name="email">
+        <input type="email" placeholder="<%= infos_user.email %>" name="email">
     </div>
 
     <div class="fields">

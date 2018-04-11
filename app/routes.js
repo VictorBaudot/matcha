@@ -141,11 +141,33 @@ module.exports = (app, passport) => {
     // =====================================
     app.get('/logout', isLoggedIn, (req, res) => {
         console.log("Logout: "+req.user.login)
-        connection.query("UPDATE users SET online = 0 WHERE login = ?", [req.user.login], (err, rows2) => {
-            if (err) return console.log(err);
-            req.logout();
-            res.redirect('/');
-        })
+        let last_visit = req.user.last_visit
+        let id = req.user.id
+        let hello = new Date();
+        console.log(hello)
+        console.log(last_visit)
+        let popbonus = Math.round((hello - last_visit) / 300000)
+        console.log(popbonus)
+        
+        function logout (){
+            connection.query("UPDATE users SET online = 0, last_visit = ? WHERE login = ?", [hello, req.user.login], (err, rows2) => {
+                if (err) return console.log(err);
+                req.logout();
+                res.redirect('/');
+            })
+        }
+        if (popbonus > 0) {
+            connection.query("SELECT pop FROM users WHERE id = ?", [id], (err, rows) => {
+                if (err) throw err;
+                if (rows.length) {
+                    connection.query("UPDATE users SET pop = ? WHERE id = ?",[rows[0].pop + popbonus, id], (err) => {
+                        if (err) return console.log(err);
+                        else logout()
+                    })
+                }
+            });
+        } else logout()
+
     });
 
     app.get('/fetch/root/:page', isLoggedIn, (req, res) => {

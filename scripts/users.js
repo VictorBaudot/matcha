@@ -11,6 +11,8 @@ CREATE TABLE IF NOT EXISTS \`users\` ( \
 	creation DATETIME NULL, \
 	active BINARY(1) NOT NULL default 0, \
 	ready BINARY(1) NOT NULL default 0, \
+	online BINARY(1) NOT NULL default 0, \
+	last_visit DATETIME NULL, \
     pop INT UNSIGNED NOT NULL default 100, \
 	age INT UNSIGNED NULL, \
 	genre enum('Homme', 'Femme') NOT NULL default 'Homme', \

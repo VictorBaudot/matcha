@@ -17,10 +17,11 @@ exports.filter = (req, res) => {
     sOrder: "",
     etat: ""
   }
+  let my_tags = []
   let {ageL, ageU, distanceL, distanceU, popL, popU, etat, interests} = req.body
   let querySelect = fquerySelect(user, user.genre, user.orientation)
   
-  console.log(req.body)
+  // console.log(req.body)
 
   if (ageL && ageU && ageL >= 16 && ageL <= 79 && ageU >= 17 && ageU <= 80) {
     querySelect += " AND age > " + ageL + " AND age < " + ageU
@@ -50,6 +51,7 @@ exports.filter = (req, res) => {
     total++
     filters.tags = interests.split(',')
     connection.query("SELECT * from tags", (err, rows) => {
+      if (err) throw err
       let tabTags = []
       rows.forEach(tag => {
         tabTags.push(tag.interest)
@@ -58,10 +60,10 @@ exports.filter = (req, res) => {
       for (let i = 0; i < filters.tags.length; i++) {
         if (!tabTags.includes(filters.tags[i])) filters.tags.splice(i--, 1)
       }
-      console.log(filters.tags)
+      // console.log(filters.tags)
       count++
       if (count == total)
-        displayProfile()
+        prepdisp2()
     })
   }
 
@@ -76,6 +78,16 @@ exports.filter = (req, res) => {
 
   function displayProfile() {
     //users.forEach(usr => {console.log(usr.interests)})
+    if (sType && sType === "comtags") {
+      filters.sType = sType
+      if (sOrder && sOrder === "asc") {
+        users.sort((a, b) => a.comtags - b.comtags);
+        filters.sOrder = sOrder
+      } else {
+        if (sOrder && sOrder === "desc") filters.sOrder = sOrder
+        users.sort((a, b) => b.comtags - a.comtags);
+      }
+    }
     if (filters.tags) {
       let ok = true
       let tab = []
@@ -91,29 +103,47 @@ exports.filter = (req, res) => {
     res.render('Connected/index.ejs', {filters, tags, user, users, nb_notifs, title: 'Accueil', flagNoFilter: false})
   }
 
-  prepareDisplay = () => {
-    console.log(querySelect)
-    connection.query(querySelect, [user.id, user.id], (err, rows0) => {
+  function prepareDisplay() {
+    // console.log(querySelect)
+    function prepdisp2() {
+      connection.query(querySelect, [user.id, user.id, user.id], (err, rows0) => {
+        if (err) throw err;
+        users = rows0
+        let count2 = 0
+        let total2 = users.length
+        if (count2 == total2) {
+          displayProfile()
+        } else {
+          users.forEach(usr => {
+            connection.query("SELECT interest FROM users_tags WHERE user_id = ?", usr.id, (err, rows1) => {
+              if (err) throw err;
+              usr.comtags = 0
+              let tab = []
+              rows1.forEach(row => {
+                  tab.push('#'+row.interest)
+                  my_tags.forEach(my_tag => {
+                    if (row.interest == my_tag) usr.comtags++
+                  });
+              });
+              usr.interests = tab.join(', ')
+              count2++
+              if (count2 == total2) {
+                displayProfile()
+              }
+            });
+          })
+        }
+      });
+    }
+
+    connection.query("SELECT interest FROM users_tags WHERE user_id = ?", req.user.id, (err, rows) => {
       if (err) throw err;
-      users = rows0
-      let count2 = 0
-      let total2 = users.length
-      users.forEach(usr => {
-        connection.query("SELECT interest FROM users_tags WHERE user_id = ?", usr.id, (err, rows1) => {
-          if (err) throw err;
-          let tab = []
-          rows1.forEach(row => {
-              tab.push('#'+row.interest)
-          });
-          usr.interests = tab.join(', ')
-          count2++
-          if (count2 == total2) {
-            count++
-            if (count == total)
-              displayProfile()
-          }
-        });
-      })
+      rows.forEach(row => {
+          my_tags.push(row.interest)
+      });
+      count++
+      if (count == total)
+        prepdisp2()
     });
 
     connection.query("SELECT * FROM notifs WHERE bg_id = ? AND seen = 'N'", req.user.id, (err, rows) => {
@@ -121,7 +151,7 @@ exports.filter = (req, res) => {
       nb_notifs = rows.length
       count++
       if (count == total)
-        displayProfile()
+        prepdisp2()
     });
 
     connection.query("SELECT interest FROM tags", (err, rows) => {
@@ -129,16 +159,16 @@ exports.filter = (req, res) => {
       tags = rows
       count++
       if (count == total)
-          displayProfile()
+        prepdisp2()
     });
   }
-
   prepareDisplay()
 }
 
 fquerySelect = (user, genre, orientation) => {
-  let query = "SELECT *, ( 6371 * acos( cos( radians("+user.lat+") ) * cos( radians( lat ) ) * cos( radians( lng ) - radians("+user.lng+") ) + sin( radians("+user.lat+") ) * sin( radians( lat ) ) ) ) AS `distance` "
-  query += "FROM users WHERE id NOT IN (SELECT bg_id FROM blocks WHERE user_id = ?) AND ready = 1 AND id != ? AND "
+  let query = "SELECT *, ( 6371 * acos( cos( radians("+user.lat+") ) * cos( radians( lat ) ) * cos( radians( lng ) - radians("+user.lng+") ) + sin( radians("+user.lat+") ) * sin( radians( lat ) ) ) ) AS `distance`, "
+  query += "(((pop + 1)/(( 6371 * acos( cos( radians("+user.lat+") ) * cos( radians( lat ) ) * cos( radians( lng ) - radians("+user.lng+") ) + sin( radians("+user.lat+") ) * sin( radians( lat ) ) ) ) + 1)) * (pop/10) ) as `points` "
+  query += "FROM users WHERE id NOT IN (SELECT bg_id FROM blocks WHERE user_id = ?) AND id NOT IN (SELECT user_id FROM blocks WHERE bg_id = ?) AND ready = 1 AND id != ? AND "
   if (genre === "Homme") {
     if (orientation === "Hetero") {
       query += "genre = 'Femme' AND (orientation = 'Hetero' OR orientation = 'Bi')"

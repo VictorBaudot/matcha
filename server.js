@@ -65,7 +65,7 @@ io.on('connection', function(socket){
         // console.log('user disconnected');
     });
 
-    const chatRegex = new RegExp("^[a-zA-Z0-9_\ +-]{2,40}$");
+    const chatRegex = new RegExp("^[a-zA-Z0-9_\ +?!-]{2,40}$");
 
     socket.on('newmsg', (message) => {
         if(message.message === '' || me.id === undefined) {
@@ -110,8 +110,8 @@ io.on('connection', function(socket){
                                         if(err){
                                             socket.emit('mybad', err.code)
                                         } else {
-                                            console.log("Destinataire notif: ")
-                                            console.log(users[message.bg_id])
+                                            // console.log("Destinataire notif: ")
+                                            // console.log(users[message.bg_id])
                                             if (users[message.bg_id]) io.to(users[message.bg_id].socketid).emit('notif', message)
                                         }
                                     })
@@ -130,7 +130,7 @@ io.on('connection', function(socket){
     socket.on('visit', (infos) => {
         let user_id = infos.user_id
         let bg_id = infos.bg_id
-        console.log(user_id+" - "+bg_id)
+        // console.log(user_id+" - "+bg_id)
         connection.query("SELECT * FROM notifs WHERE user_id = ? AND type = ? AND bg_id = ?", [user_id, 'visit', bg_id], (err, rows0) => {
             if (err) throw err;
             if (!rows0.length) {
@@ -149,8 +149,8 @@ io.on('connection', function(socket){
                                 connection.query("UPDATE users SET pop = ? WHERE id = ?",[rows[0].pop + 10, bg_id], (err) => {
                                     if (err) return console.log(err);
                                     else {
-                                        console.log("Destinataire notif: ")
-                                        console.log(users[bg_id])
+                                        // console.log("Destinataire notif: ")
+                                        // console.log(users[bg_id])
                                         if (users[bg_id]) io.to(users[bg_id].socketid).emit('notif', 'visit')
                                     }
                                 })
@@ -166,7 +166,7 @@ io.on('connection', function(socket){
     socket.on('like', (infos) => {
         let user_id = infos.user_id
         let bg_id = infos.bg_id
-        console.log(user_id+" - "+bg_id)
+        // console.log(user_id+" - "+bg_id)
 
         function addNotif(type) {
             console.log(type)
@@ -189,8 +189,8 @@ io.on('connection', function(socket){
                                         connection.query("UPDATE users SET pop = ? WHERE id = ?",[rows[0].pop + 20, bg_id], (err) => {
                                             if (err) return console.log(err);
                                             else {
-                                                console.log("Destinataire notif: ")
-                                                console.log(users[bg_id])
+                                                // console.log("Destinataire notif: ")
+                                                // console.log(users[bg_id])
                                                 if (users[bg_id]) io.to(users[bg_id].socketid).emit('notif', 'like')
                                             }
                                         })
@@ -210,8 +210,8 @@ io.on('connection', function(socket){
                     if (err) {
                         socket.emit('mybad', err.code)
                     } else {
-                        console.log("Destinataire notif: ")
-                        console.log(users[bg_id])
+                        // console.log("Destinataire notif: ")
+                        // console.log(users[bg_id])
                         if (users[bg_id]) io.to(users[bg_id].socketid).emit('notif', type)
                     }
                 })

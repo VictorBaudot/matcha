@@ -1,6 +1,9 @@
 const connection = require('../../config/db')
 const multer = require('multer')
 const path = require('path')
+const moment = require('moment')
+
+moment.locale('fr')
 
 exports.profile = (req, res) => {
   let login = req.user.login
@@ -13,6 +16,7 @@ exports.profile = (req, res) => {
   let nb_notifs = 0
 
   function displayProfile() {
+    infos_user.last_visit = capitalizeFirstLetter(moment(infos_user.last_visit).fromNow())
       res.render('Connected/profile/profile.ejs', {infos_user, tags, interests, likes, visits, user, nb_notifs, title: 'Profil'})
   }
 
@@ -105,7 +109,6 @@ exports.modify_profile = (req, res) => {
     // console.log(req.body)
     const Check = require('./../models/check')
     let params = {login, prenom, nom, email, age, password, confirm, genre, orientation, bio, interests, localisation, lat, lng} = req.body
-    params = {login, prenom, nom, email, age, password, confirm, genre, orientation, bio, interests, localisation, lat, lng}
     let count = 0
     let o = {}
     let id = req.user.id
@@ -119,8 +122,8 @@ exports.modify_profile = (req, res) => {
     }
 
     if (total === 0) {
-        if (!req.files) req.flashAdd('tabError', 'Aucune modification n\'a ete enregistree.');
-        res.redirect('/profile')
+        if (Object.keys(req.files).length === 0) req.flashAdd('tabError', 'Aucune modification n\'a ete enregistree.');
+        checkReady(id)
     }
 
     function checkReady (id) {
@@ -155,6 +158,7 @@ exports.modify_profile = (req, res) => {
                 for (let i in o) {
                     if (o[i] && i !== 'confirm' && i !== 'lat' && i !== 'lng') req.flashAdd('tabSuccess', capitalizeFirstLetter(i)+' -> '+o[i]);
                 }
+                console.log("Check")
                 checkReady(id)
             })
         } else res.redirect('/profile')
@@ -207,13 +211,14 @@ exports.modify_profile = (req, res) => {
       let login = req.params.login
       let infos_user = {}
       let interests
-      let liked, blocked, reported
+      let liked, matched, blocked, reported, liked_me
       let User = require('./../models/user')
       let user_id = req.user.id
       let count = 0, nb_notifs = 0, total = 2
 
       function displayBg() {
-          res.render('Connected/bg', {infos_user, interests, liked, blocked, reported, user: req.user, nb_notifs, title: login})
+        infos_user.last_visit = capitalizeFirstLetter(moment(infos_user.last_visit).fromNow())
+        res.render('Connected/bg', {infos_user, interests, liked, liked_me, matched, blocked, reported, user: req.user, nb_notifs, title: login})
       }
 
       connection.query("SELECT * FROM notifs WHERE bg_id = ? AND seen = 'N'", req.user.id, (err, rows) => {
@@ -225,24 +230,34 @@ exports.modify_profile = (req, res) => {
       });
 
       function likeBlockReport (bg_id) {
-          connection.query("SELECT * FROM likes WHERE user_id = ? AND bg_id = ?", [user_id, bg_id], (err, rows) => {
-              if (err) throw err;
-              if (!rows.length) liked = false
-              else liked = true
-              connection.query("SELECT * FROM blocks WHERE user_id = ? AND bg_id = ?", [user_id, bg_id], (err, rows) => {
-                  if (err) throw err;
-                  if (!rows.length) blocked = false
-                  else blocked = true
-                  connection.query("SELECT * FROM reports WHERE user_id = ? AND bg_id = ?", [user_id, bg_id], (err, rows) => {
-                      if (err) throw err;
-                      if (!rows.length) reported = false
-                      else reported = true
-                      count++
-                      if (count == total)
-                        displayBg()
-                  });
-              });
-          });
+        connection.query("SELECT * FROM likes WHERE user_id = ? AND bg_id = ?", [bg_id, user_id], (err, rows) => {
+            if (err) throw err;
+            if (!rows.length) liked_me = false
+            else liked_me = true
+            connection.query("SELECT * FROM likes WHERE user_id = ? AND bg_id = ?", [user_id, bg_id], (err, rows) => {
+                if (err) throw err;
+                if (!rows.length) liked = false
+                else liked = true
+                connection.query("SELECT * FROM blocks WHERE user_id = ? AND bg_id = ?", [user_id, bg_id], (err, rows) => {
+                    if (err) throw err;
+                    if (!rows.length) blocked = false
+                    else blocked = true
+                    connection.query("SELECT * FROM reports WHERE user_id = ? AND bg_id = ?", [user_id, bg_id], (err, rows) => {
+                        if (err) throw err;
+                        if (!rows.length) reported = false
+                        else reported = true
+                        connection.query("SELECT * FROM matchs WHERE user_id = ? AND bg_id = ?", [user_id, bg_id], (err, rows) => {
+                            if (err) throw err;
+                            if (!rows.length) matched = false
+                            else matched = true
+                            count++
+                            if (count == total)
+                            displayBg()
+                        })
+                    });
+                });
+            });
+        });
       }
 
       function addVisit (bg_id) {
@@ -262,19 +277,34 @@ exports.modify_profile = (req, res) => {
 
       User.findByLogin(login, (infos, err) => {
           if (err || !infos) {
-              req.flashAdd('tabError', 'Aiee... Desole, ce BG n\'existe pas');
-              res.redirect('/')
+              req.flashAdd('tabError', 'Aiee... Desole, ce(tte) BG n\'existe pas');
+              res.redirect('back')
           } else {
-              infos_user = infos
-              connection.query("SELECT interest FROM users_tags WHERE user_id = ?", infos_user.id, (err, rows) => {
-                  if (err) throw err;
-                  let tab = []
-                  rows.forEach(row => {
-                      tab.push('#'+row.interest)
-                  });
-                  interests = tab.join(', ')
-                  hasVisited(infos_user.id)
-              });
+                if (infos.ready == 0) {
+                    req.flashAdd('tabError', 'Cet utilisateur n\'est pas pret a matcher (et encore moins avec toi)');
+                    res.redirect('back')
+                }
+                else {
+                    connection.query("SELECT * FROM users WHERE login = ? AND id IN (SELECT user_id FROM blocks WHERE bg_id = ?)", [login, user_id], (err, rows3) => {
+                        if (err) throw err;
+                        if (rows3.length) {
+                            req.flashAdd('tabError', 'Sorry, mais vous avez ete bloque par cette personne geniale');
+                            res.redirect('back')
+                        }
+                        else {
+                            infos_user = infos
+                            connection.query("SELECT interest FROM users_tags WHERE user_id = ?", infos_user.id, (err, rows) => {
+                                if (err) throw err;
+                                let tab = []
+                                rows.forEach(row => {
+                                    tab.push('#'+row.interest)
+                                });
+                                interests = tab.join(', ')
+                                hasVisited(infos_user.id)
+                            });
+                        }
+                    });
+                }
           }
       })
 

@@ -45,3 +45,16 @@ footer {
 .pointer {
     cursor:pointer;
 }
+
+#backimg {
+    position: relative;
+    top: 0;
+    left: 0;
+}
+
+#overimg {
+    position: absolute;
+    opacity: 0.5;
+    top: 0px;
+    left: 0px;
+}

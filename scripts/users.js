@@ -1,6 +1,6 @@
 const connection = require('../config/db')
 
-module.exports = connection.query(`\
+connection.query(`\
 CREATE TABLE IF NOT EXISTS \`users\` ( \
     id INT UNSIGNED NOT NULL AUTO_INCREMENT, \
     login VARCHAR(60) NOT NULL default '', \
@@ -30,5 +30,3 @@ CREATE TABLE IF NOT EXISTS \`users\` ( \
 	if (err) console.error(err)
 	else console.log('Success: table users Created!')
 });
-
-connection.end();

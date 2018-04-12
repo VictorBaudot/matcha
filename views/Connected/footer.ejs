@@ -55,7 +55,7 @@
         })
 
         socket.on('logged', () => {
-            console.log("LOGGED IN -> SUCCESS")
+            // console.log("LOGGED IN -> SUCCESS")
         })
 
         socket.on('online', (login) => {
@@ -72,8 +72,8 @@
         });
 
         socket.on('notif', (notif) => {
-            console.log("Notif: ")
-            console.log(notif)
+            // console.log("Notif: ")
+            // console.log(notif)
             nb_notifs++
             if ($('.displayNotifs').css('display') == 'none') $('.displayNotifs').css('display', 'block');
             $('#nb_notifs').text(nb_notifs);

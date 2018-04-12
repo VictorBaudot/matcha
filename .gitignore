@@ -1,6 +1,6 @@
 # node
 
 public/semantic
-public/pics
 node_modules/
 package-lock.json
+mysql

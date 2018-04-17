@@ -112,7 +112,7 @@
         })
 
         socket.on('mybad', (error) => {
-            console.error(error)
+            // console.error(error)
             $('#negativeMsg').html('<div class="ui negative message">'+error+'</div>')
             $('#negativeMsg').fadeIn(500);
             setTimeout(function(){

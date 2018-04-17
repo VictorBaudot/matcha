@@ -132,7 +132,7 @@ exports.modify_profile = (req, res) => {
             if (err) throw err;
             let u = rows[0]
             if (u.ready == 0) {
-                if (u.pp != "default.jpg" && u.age && u.localisation) {
+                if (u.pp != "/assets/pics/default.jpg" && u.age && u.localisation) {
                     connection.query("UPDATE users SET ready = 1 WHERE id = ?",[id], (err, rows) => {
                         if (err) throw err;
                         req.flashAdd('tabSuccess', 'Vous etes desormais pret a Matcher!')

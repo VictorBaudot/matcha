@@ -9,7 +9,7 @@ const session = require("express-session")
 const busboyBodyParser = require('busboy-body-parser')
 
 const port = 6969;
-const hostname = '127.0.0.1';
+const hostname = 'localhost';
 const connection = require('./config/db')
 
 require('./config/passport')(passport)
@@ -147,7 +147,7 @@ io.on('connection', function(socket){
                             if (err) throw err;
                             if (rows.length) {
                                 connection.query("UPDATE users SET pop = ? WHERE id = ?",[rows[0].pop + 10, bg_id], (err) => {
-                                    if (err) return console.log(err);
+                                    if (err) throw err;
                                     else {
                                         // console.log("Destinataire notif: ")
                                         // console.log(users[bg_id])
@@ -169,7 +169,7 @@ io.on('connection', function(socket){
         // console.log(user_id+" - "+bg_id)
 
         function addNotif(type) {
-            console.log(type)
+            // console.log(type)
             if (type == 'like') {
                 connection.query("SELECT * FROM notifs WHERE user_id = ? AND type = ? AND bg_id = ?", [user_id, 'like', bg_id], (err, rows0) => {
                     if (err) throw err;
@@ -187,7 +187,7 @@ io.on('connection', function(socket){
                                     if (err) throw err;
                                     if (rows.length) {
                                         connection.query("UPDATE users SET pop = ? WHERE id = ?",[rows[0].pop + 20, bg_id], (err) => {
-                                            if (err) return console.log(err);
+                                            if (err) throw err;
                                             else {
                                                 // console.log("Destinataire notif: ")
                                                 // console.log(users[bg_id])

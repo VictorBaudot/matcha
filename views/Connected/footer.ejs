@@ -59,15 +59,15 @@
         })
 
         socket.on('online', (login) => {
-            console.log(login + " is connected")
+            // console.log(login + " is connected")
         })
 
-        socket.on('mybad', (error) => {
-            if (error) console.log(error)
-        })
+        // socket.on('mybad', (error) => {
+        //     if (error) console.log(error)
+        // })
 
         socket.on('connect_error', function() {
-            console.log('Got disconnect!');
+            // console.log('Got disconnect!');
             socket.disconnect();
         });
 

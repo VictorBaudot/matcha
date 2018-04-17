@@ -8,7 +8,7 @@ forgot_pwd = (req, res) => {
   let id
   let check = () => {
     connection.query("SELECT * FROM users WHERE login = ? AND email = ?",[login, email], (err, rows) => {
-      if (err) return console.log(err);
+      if (err) throw err;
       else if (!rows.length) {
         req.flashAdd('tabError', 'Les informations que vous venez d\'envoyer sont incorrectes.')
         res.redirect('back')
@@ -18,7 +18,7 @@ forgot_pwd = (req, res) => {
         let newpwd = generatePassword()
         let newpwd_crypt = bcrypt.hashSync(newpwd, bcrypt.genSaltSync(9))
         connection.query("UPDATE users SET password = ? WHERE id = ?",[newpwd_crypt, id], (err, rows) => {
-          if (err) return console.log(err);
+          if (err) throw err;
           else go("Reinitialisation Mot de Passe", newpwd, newpwd, email)
         })
       }
@@ -32,11 +32,11 @@ forgot_pwd = (req, res) => {
       return process.exit(1);
     }
 
-    console.log('Credentials obtained, sending message...');
+    // console.log('Credentials obtained, sending message...');
 
     // create reusable transporter object using the default SMTP transport
     let transporter = nodemailer.createTransport({
-        port: 1025,
+        port: 1050,
         ignoreTLS : true
     });
 
@@ -52,12 +52,12 @@ forgot_pwd = (req, res) => {
     // send mail with defined transport object
     transporter.sendMail(mailOptions, (err, info) => {
         if (err) {
-          console.log('Error occurred. ' + err.message);
+          // console.log('Error occurred. ' + err.message);
           return process.exit(1);
         }
-        console.log('Message sent: %s', info.messageId);
+        // console.log('Message sent: %s', info.messageId);
         // Preview only available when sending through an Ethereal account
-        console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+        // console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
         req.flashAdd('tabSuccess', 'Felicitatiions, votre nouveau mot de passe vient de vous etre envoye!')
         res.redirect('/')
 

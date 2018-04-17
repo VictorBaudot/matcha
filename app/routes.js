@@ -24,6 +24,12 @@ module.exports = (app, passport) => {
         } else res.render("NotConnected/index.ejs")
     })
 
+    app.get('/auth/42', passport.authenticate('42'));
+    
+    app.get('/auth/42/callback', passport.authenticate('42', { failureRedirect: '/' }), (req, res) => {
+        res.redirect('/profile'); // Successful authentication, redirect home.
+    });
+
     app.get('/confirm/:login/:token', (req, res) => {
         confirm(req, res)
     })
@@ -101,7 +107,7 @@ module.exports = (app, passport) => {
     app.post('/modify_profile', isLoggedIn, (req, res) => {
         upload(req, res, (err) => {
             if(err){
-                console.log(err)
+                // console.log(err)
                 req.flashAdd('tabError', 'Le fichier que vous essayez d\'envoyer n\'est pas adapte');
                 res.redirect('back')
             } else {
@@ -116,7 +122,7 @@ module.exports = (app, passport) => {
     app.get('/bg/:login', isLoggedIn, (req, res) => {
         let user = req.user
         if (req.params.login == user.login) {
-            res.redirect('/profile')
+            return res.redirect('/profile')
         }
         if (user.ready == 0) {
             req.flashAdd('tabSuccess', 'Complete ton profil avant de pouvoir aller matcher.')
@@ -140,18 +146,18 @@ module.exports = (app, passport) => {
     // LOGOUT ==============================
     // =====================================
     app.get('/logout', isLoggedIn, (req, res) => {
-        console.log("Logout: "+req.user.login)
+        // console.log("Logout: "+req.user.login)
         let last_visit = req.user.last_visit
         let id = req.user.id
         let hello = new Date();
-        console.log(hello)
-        console.log(last_visit)
+        // console.log(hello)
+        // console.log(last_visit)
         let popbonus = Math.round((hello - last_visit) / 300000)
-        console.log(popbonus)
+        // console.log(popbonus)
         
         function logout (){
             connection.query("UPDATE users SET online = 0, last_visit = ? WHERE login = ?", [hello, req.user.login], (err, rows2) => {
-                if (err) return console.log(err);
+                if (err) throw err
                 req.logout();
                 res.redirect('/');
             })
@@ -161,7 +167,7 @@ module.exports = (app, passport) => {
                 if (err) throw err;
                 if (rows.length) {
                     connection.query("UPDATE users SET pop = ? WHERE id = ?",[rows[0].pop + popbonus, id], (err) => {
-                        if (err) return console.log(err);
+                        if (err) throw err
                         else logout()
                     })
                 }

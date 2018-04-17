@@ -3,6 +3,7 @@ const connection = require('../config/db')
 connection.query(`\
 CREATE TABLE IF NOT EXISTS \`users\` ( \
     id INT UNSIGNED NOT NULL AUTO_INCREMENT, \
+	fortytwoId int(11) NULL, \
     login VARCHAR(60) NOT NULL default '', \
 	prenom VARCHAR(255) NOT NULL default '', \
 	nom VARCHAR(255) NOT NULL default '', \
@@ -22,9 +23,9 @@ CREATE TABLE IF NOT EXISTS \`users\` ( \
 	localisation VARCHAR(255) NULL, \
 	lat FLOAT( 10, 6 ) NULL, \
 	lng FLOAT( 10, 6 ) NULL, \
-	pp VARCHAR(320) NOT NULL default 'default.jpg', \
-	p2 VARCHAR(320) NOT NULL default 'default.jpg', \
-	p3 VARCHAR(320) NOT NULL default 'default.jpg', \
+	pp VARCHAR(320) NOT NULL default '/assets/pics/default.jpg', \
+	p2 VARCHAR(320) NOT NULL default '/assets/pics/default.jpg', \
+	p3 VARCHAR(320) NOT NULL default '/assets/pics/default.jpg', \
         PRIMARY KEY (id) \
 )`, (err) => {
 	if (err) console.error(err)

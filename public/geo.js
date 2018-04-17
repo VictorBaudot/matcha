@@ -4,11 +4,11 @@
 //////////////////////
 
 function errorFunction(){
-    console.log("Geocoder failed -> Go with IP");
+    // console.log("Geocoder failed -> Go with IP");
     $.getJSON('http://ipinfo.io', function(data){
-        console.log(data.city+', '+data.country)
-        console.log(data.loc.split(',')[0]);
-        console.log(data.loc.split(',')[1]);
+        // console.log(data.city+', '+data.country)
+        // console.log(data.loc.split(',')[0]);
+        // console.log(data.loc.split(',')[1]);
         document.getElementById('txtPlaces').value = data.city+', '+data.country;
         document.getElementById('lat').value = data.loc.split(',')[0];
         document.getElementById('lng').value = data.loc.split(',')[1];
@@ -22,7 +22,7 @@ function errorFunction(){
 if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(successFunction, errorFunction);
 } else {
-    console.log("Geolocation is not supported by this browser.");
+    // console.log("Geolocation is not supported by this browser.");
 }
 //Get the latitude and the longitude;
 function successFunction(position) {
@@ -33,7 +33,7 @@ function successFunction(position) {
 
 
 function initialize() {
-    console.log("Initialize")
+    // console.log("Initialize")
 }
 
 function codeLatLng(lat, lng) {
@@ -42,13 +42,13 @@ function codeLatLng(lat, lng) {
     geocoder.geocode({'latLng': latlng}, function(results, status) {
         if (status == google.maps.GeocoderStatus.OK) {
         if (results[1]) {
-            console.log(results[1].formatted_address+"\n"+lat+"\n"+lng)
+            // console.log(results[1].formatted_address+"\n"+lat+"\n"+lng)
             document.getElementById('txtPlaces').value = results[1].formatted_address;
             document.getElementById('lat').value = lat;
             document.getElementById('lng').value = lng;
         }
         } else {
-        console.log("Geocoder failed due to: " + status);
+        // console.log("Geocoder failed due to: " + status);
         }
     });
 }

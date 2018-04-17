@@ -122,15 +122,16 @@
 <div class="ui main container" style="margin-top: 3em;"></div>
 <div class="ui match-feed link centered cards">
     <% let flag = true;
+    if (users) {
     for (usr of users) {
         if (usr.distance >= filters.dists.l && usr.distance <= filters.dists.u) {
-            flag = false;%>
+            flag = false; %>
         <a id="cardMargin" class="ui teal card" href="/bg/<%= usr.login %>">
             <div class="ui image">
                 <%  if (usr.online == 1) { %>
                     <span id="online" class="ui teal right ribbon label" style="z-index:99">En ligne</span>
                 <% } %>
-                <img src="/assets/pics/<%= usr.pp %>">
+                <img src="<%= usr.pp %>">
             </div>
             <div class="content">
                 <span class="right floated">
@@ -153,8 +154,8 @@
                 </span>
             </div>
         </a>
-    <% }%>
-<% } if (!users || flag == true) { %> <h1 class="ui">Aucun resultat...</h1> <% } %>
+    <% } %>
+<% } } if (!users || flag == true) { %> <h1 class="ui">Aucun resultat...</h1> <% } %>
 </div>
 <% if (flagNoFilter && flagNoFilter == true) { %>
 <script>

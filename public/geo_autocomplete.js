@@ -14,6 +14,6 @@ google.maps.event.addDomListener(window, 'load', function () {
         var mesg = "Address: " + address;
         mesg += "\nLatitude: " + latitude;
         mesg += "\nLongitude: " + longitude;
-        console.log(mesg);
+        // console.log(mesg);
     });
 });

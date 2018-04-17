@@ -131,7 +131,7 @@ var Check = {
                 rep = false
             }
         });
-        console.log(rep)
+        // console.log(rep)
         cb(rep)
     },
 
@@ -165,7 +165,7 @@ var Check = {
 
 function isLengthOkay(champs, value, req) {
     let result = true
-    console.log(champs+" : "+value.length)
+    // console.log(champs+" : "+value.length)
     if (value.length < 3) {
         req.flashAdd('tabError', champs+': trop court');
         result = false

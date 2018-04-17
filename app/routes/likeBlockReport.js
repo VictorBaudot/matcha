@@ -6,7 +6,7 @@ exports.block = (req, res) => {
   let bg_id = req.body.bg_id
 //   console.log(user_id+" - "+bg_id)
 function unMatch () {
-    console.log("Unmatch")
+    // console.log("Unmatch")
     connection.query('DELETE FROM matchs WHERE user_id = ? AND bg_id = ?', [user_id, bg_id], (err) => {
         if (err) throw err
         connection.query('DELETE FROM matchs WHERE user_id = ? AND bg_id = ?', [bg_id, user_id], (err) => {
@@ -16,7 +16,7 @@ function unMatch () {
     });
 }
 function unlike () {
-    console.log("Unlike")
+    // console.log("Unlike")
     connection.query('DELETE FROM likes WHERE user_id = ? AND bg_id = ?', [user_id, bg_id], (err) => {
         if (err) throw err
         connection.query("SELECT * FROM likes WHERE user_id = ? AND bg_id = ?", [bg_id, user_id], (err, rows) => {

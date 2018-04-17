@@ -5,14 +5,14 @@ confirm = (req, res) => {
   let token = req.params.token
 
   connection.query("SELECT * FROM users WHERE login = ? AND token = ?",[login, token], (err, rows) => {
-    if (err) return console.log(err);
+    if (err) throw err;
     else if (!rows.length) {
       req.flashAdd('tabError', 'Votre lien de confirmation n\'est pas valide.')
       res.redirect('/')
     }
     else {
       connection.query("UPDATE users SET active = 1 WHERE login = ? AND token = ?",[login, token], (err, rows) => {
-        if (err) return console.log(err);
+        if (err) throw err;
         else {
           req.flashAdd('tabSuccess', 'Email valide. Vous pouvez maintenant vous connecter.')
           res.redirect('/')

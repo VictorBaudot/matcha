@@ -25,17 +25,17 @@
         <div class="ui shape">
             <div class="sides">
                 <div id="parentimg" class="side active">
-                    <img id="backimg" src="/assets/pics/<%= infos_user.pp %>">
+                    <img id="backimg" src="<%= infos_user.pp %>">
                     <%  if (blocked) { %><img id="overimg" src="/assets/pics/block.png">
                     <%  } else if (reported) { %><img id="overimg" src="/assets/pics/report.png">
                     <%  } else if (matched) { %><img id="overimg" src="/assets/pics/match.png">
                     <%  } else if (liked) { %><img id="overimg" src="/assets/pics/like.png"><% } %>
                 </div>
                 <div class="side">
-                    <img src="/assets/pics/<%= infos_user.p2 %>">
+                    <img src="<%= infos_user.p2 %>">
                 </div>
                 <div class="side">
-                    <img src="/assets/pics/<%= infos_user.p3 %>">
+                    <img src="<%= infos_user.p3 %>">
                 </div>
             </div>
         </div>

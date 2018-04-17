@@ -86,7 +86,7 @@ exports.modify_pics = (req, res, cb) => {
             let User = require('./../models/user')
             User.update(id, o, () => {
                 req.flashAdd('tabSuccess', 'Modification des photos de profil reussie.');
-                console.log(req.session.flash)
+                // console.log(req.session.flash)
                 cb(req, res)
             })
         } else cb(req, res)
@@ -95,7 +95,7 @@ exports.modify_pics = (req, res, cb) => {
     for (let i in pics) {
         if (pics[i]) {
             // console.log(i+" - "+pics[i][0].filename)
-            o[i] = pics[i][0].filename
+            o[i] = '/assets/pics/' + pics[i][0].filename
         }
     }
     
@@ -108,7 +108,8 @@ exports.modify_profile = (req, res) => {
     // console.log("Body: ")
     // console.log(req.body)
     const Check = require('./../models/check')
-    let params = {login, prenom, nom, email, age, password, confirm, genre, orientation, bio, interests, localisation, lat, lng} = req.body
+    let {login, prenom, nom, email, age, password, confirm, genre, orientation, bio, interests, localisation, lat, lng} = req.body
+    let params = {login, prenom, nom, email, age, password, confirm, genre, orientation, bio, interests, localisation, lat, lng}
     let count = 0
     let o = {}
     let id = req.user.id
@@ -133,7 +134,7 @@ exports.modify_profile = (req, res) => {
             if (u.ready == 0) {
                 if (u.pp != "default.jpg" && u.age && u.localisation) {
                     connection.query("UPDATE users SET ready = 1 WHERE id = ?",[id], (err, rows) => {
-                        if (err) return console.log(err);
+                        if (err) throw err;
                         req.flashAdd('tabSuccess', 'Vous etes desormais pret a Matcher!')
                         res.redirect('/profile')
                     })
@@ -147,18 +148,18 @@ exports.modify_profile = (req, res) => {
     //  console.log(JSON.stringify(o, null, 4));
         if (Object.keys(o).length !== 0){
             let User = require('./../models/user')
-            console.log(o)
+            // console.log(o)
             if (!o.localisation || !o.lat || !o.lng ) {
                 if (o.localisation) delete o.localisation
                 if (o.lat) delete o.lat
                 if (o.lng) delete o.lng
             }
-            console.log(o)
+            // console.log(o)
             User.update(id, o, () => {
                 for (let i in o) {
                     if (o[i] && i !== 'confirm' && i !== 'lat' && i !== 'lng') req.flashAdd('tabSuccess', capitalizeFirstLetter(i)+' -> '+o[i]);
                 }
-                console.log("Check")
+                // console.log("Check")
                 checkReady(id)
             })
         } else res.redirect('/profile')

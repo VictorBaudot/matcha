@@ -131,7 +131,7 @@ generateUsers = (nb) => {
         lat: latitude,
         lng: longitude,
         online: (Math.floor(Math.random() * 20 ) > 15) ? 1 : 0,
-        pp: genre+'/'+Math.floor(Math.random() * 59)+'.jpg'
+        pp: '/assets/pics/' + genre+'/'+Math.floor(Math.random() * 59)+'.jpg'
       })
 
       count++

@@ -20,7 +20,7 @@ exports.root = (req, res) => {
 
     displayProfile = () => {
       // users.forEach(usr => {console.log(usr.login)})
-      users.sort((a, b) => b.points - a.points);
+      if (users) users.sort((a, b) => b.points - a.points);
       res.render('Connected/index.ejs', {filters, tags, user, users, nb_notifs, title: 'Accueil', flagNoFilter: true})
     }
 

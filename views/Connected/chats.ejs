@@ -9,7 +9,7 @@
                     for (bg of matchs) {
                         if (i == 0) { %>
                             <a class="item active" data-tab="<%= bg.id %>">
-                                <img class="ui avatar image" src="/assets/pics/<%= bg.pp %>">
+                                <img class="ui avatar image" src="<%= bg.pp %>">
                                 <%= bg.prenom %>
                                 <%  if (bg.online == 1) { %>
                                     <span class="ui teal empty circular label"></span>
@@ -19,7 +19,7 @@
                             </a>
                         <% } else { %>
                             <a class="item" data-tab="<%= bg.id %>">
-                                <img class="ui avatar image" src="/assets/pics/<%= bg.pp %>">
+                                <img class="ui avatar image" src="<%= bg.pp %>">
                                 <%= bg.prenom %>
                                 <%  if (bg.online == 1) { %>
                                     <span class="ui teal empty circular label"></span>
@@ -108,7 +108,7 @@
         <% } %>
 
         socket.on('logged', () => {
-            console.log("LOGGED IN -> SUCCESS")
+            // console.log("LOGGED IN -> SUCCESS")
         })
 
         socket.on('mybad', (error) => {
@@ -121,13 +121,13 @@
         })
 
         socket.on('connect_error', function() {
-            console.log('Got disconnect!');
+            // console.log('Got disconnect!');
             socket.disconnect();
         });
 
         socket.on('notif', (notif) => {
-            console.log("Notif: ")
-            console.log(notif)
+            // console.log("Notif: ")
+            // console.log(notif)
             nb_notifs++
             if ($('.displayNotifs').css('display') == 'none') $('.displayNotifs').css('display', 'block');
             $('#nb_notifs').text(nb_notifs);

@@ -2,7 +2,7 @@ const connection = require('../../config/db')
 
 exports.root = (req, res) => {
   let page = req.params.page;
-  console.log("Page: "+page)
+  // console.log("Page: "+page)
   let user = req.user
   let my_tags = []
     let users = []
@@ -17,7 +17,7 @@ exports.root = (req, res) => {
     let querySelect = fquerySelect(user, user.genre, user.orientation)+" ORDER BY points DESC LIMIT 30 OFFSET ?"
 
     let displayProfile = () => {
-      console.log("Nb users: " + users.length)
+      // console.log("Nb users: " + users.length)
       users.sort((a, b) => b.points - a.points);
       res.render('Connected/fetchRoot.ejs', {filters, users})
     }

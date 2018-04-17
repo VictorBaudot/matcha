@@ -3,7 +3,7 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const nomRegex = new RegExp("^[a-zA-Z]{3,16}$");
 const loginRegex = new RegExp("^[a-zA-Z0-9_]{3,16}$");
 const interestRegex = new RegExp("^[a-zA-Z0-9_]{2,18}$");
-const bioRegex = new RegExp("^[a-zA-Z0-9\p{L}_,#\ +-]{2,50}$");
+const bioRegex = new RegExp("^[a-zA-Z0-9À-ÿ\p{L}_,#\ +-]{2,100}$");
 const latlngRegex = new RegExp("^-?[0-9]{1,3}(?:\.[0-9]{1,20})?$")
 
 var Check = {

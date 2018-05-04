@@ -1,4 +1,4 @@
-# Matcha: dating website made with NodeJs -- Project 42
+# Matcha: dating website made with NodeJs -- 42's project
 
 Code for the entire Matcha website
 

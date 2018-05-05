@@ -13,7 +13,7 @@
 	and in `scripts/seed.js` (line 35)
 	4. Create data schema: `node scripts/main.js`
 	5. Add fake profiles: `node scripts/seed.js 500`
-	6. Install and launch maildev to get all emails sent from the app: `sudo npm i -g maildev && maildev -s 1050`
+	6. To get all emails sent from the app: `sudo npm i -g maildev && maildev -s 1050`
 	7. Launch: `npm start`
 	8. Visit in your browser at: `http://localhost:6969`
 

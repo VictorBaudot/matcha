@@ -32,7 +32,7 @@ getTags = (nb) => {
 }
 
 getLocation = (lat, lng, cb) => {
-  var url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='+lat+','+lng+'&key=AIzaSyD1BJh8Wr--cY3PkcqAdl1XIxfJdpNr72Q';
+  var url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='+lat+','+lng+'&key=';
   request({
     url: url,
     json: true

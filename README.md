@@ -7,10 +7,10 @@
 	1. Clone the repo: `git clone https://github.com/VictorBaudot/matcha.git`
 	2. Install packages: `npm install`
 	3. Edit the database configuration in `config/db.js`, 
-	add your 42's API credentials in `config/passport.js` 
-	and add your Google Maps's API key 
-	in `view/Connected/private.ejs` (line 1) 
-	and in `scripts/seed.js` (line 35)
+		add your 42's API credentials in `config/passport.js` 
+		and add your Google Maps's API key 
+		in `view/Connected/private.ejs` (line 1) 
+		and in `scripts/seed.js` (line 35)
 	4. Create data schema: `node scripts/main.js`
 	5. Add fake profiles: `node scripts/seed.js 500`
 	6. To get all emails sent from the app: `sudo npm i -g maildev && maildev -s 1050`

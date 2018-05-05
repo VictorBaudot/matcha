@@ -1,21 +1,51 @@
 # Matcha: dating website made with NodeJs -- 42's project
 
-Code for the entire Matcha website
+![home](https://preview.ibb.co/kxr9Tn/matcha_home.png)
 
-Current version database is ported to MySQL
+## Install
 
-We will be using Passport to authenticate users locally
+	1. Clone the repo: `git clone https://github.com/VictorBaudot/matcha.git`
+	2. Install packages: `npm install`
+	3. Edit the database configuration: `config/database.js`
+	4. Create data schema: `node scripts/main.js`
+	5. Add fake profiles: `node scripts/seed.js 500`
+	6. Install and launch maildev to get all emails sent from the app: `npm i -g maildev && maildev -s 1050`
+	7. Launch: `npm start`
+	8. Visit in your browser at: `http://localhost:6969`
 
-## Instructions
+## Subject 
+	This project is about creating a dating website. 
+	You will need to create an app allowing two potential lovers to meet, from the registration to the final encounter. 
+	A user will then be able to register, connect, fill his/her profile, search and look into the profile of other users, like them, chat with those that “liked” back.
+	Look at `subject.pdf` for more details.
 
-If you would like to download the code and try it for yourself:
+## Key concepts 
+	* Front-end framework
+	* Build tools
+	* Micro-framework 
+	* Advanced user registration and sign-in
+	* Real-time application
+	* Geolocation 
+	* Security (XSS, SQL injection..) 
+	* Data validation
+	* UX / UI Design 
 
-1. Clone the repo: `git clone git@github.com:VictorBaudot/matcha.git`
-2. Install packages: `npm install`
-3. Edit the database configuration: `config/database.js`
-4. Create data schema: `node scripts/main.js`
-5. Add fake profiles: `node scripts/seed.js 500`
-6. Install and launch maildev to get all emails sent from the app: `npm i -g maildev && maildev -s 1050`
-7. Launch: `npm start`
-8. Visit in your browser at: `http://localhost:6969`
+## My stack
+	* Node.js
+	* Express (+ middleware)
+	* JavaScript ES6+
+	* MySQL
+ 	* OAuth
+	* Socket.io
+	* Fakerjs
 
+## Project’s constraints 
+
+	Mandatory tools: 
+		* Relational database 
+
+	Forbidden tools:
+		* ORM/ODM
+		* MVC framework
+		* Validators 
+		* Registration / Authentication library 

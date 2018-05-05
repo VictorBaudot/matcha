@@ -1,6 +1,6 @@
 # Matcha: dating website made with NodeJs -- 42's project
 
-![home](https://preview.ibb.co/kxr9Tn/matcha_home.png)
+![home](https://ibb.co/mUSion)
 
 ## Install
 
@@ -15,8 +15,10 @@
 
 ## Subject 
 	This project is about creating a dating website. 
-	You will need to create an app allowing two potential lovers to meet, from the registration to the final encounter. 
-	A user will then be able to register, connect, fill his/her profile, search and look into the profile of other users, like them, chat with those that “liked” back.
+	You will need to create an app allowing two potential lovers to meet, 
+	from the registration to the final encounter. 
+	A user will then be able to register, connect, fill his/her profile, 
+	search and look into the profile of other users, like them, chat with those that “liked” back.
 	Look at `subject.pdf` for more details.
 
 ## Key concepts 

@@ -1,6 +1,6 @@
 # Matcha: dating website made with NodeJs -- 42's project
 
-![home](https://ibb.co/mUSion)
+![home](https://image.ibb.co/c6AQ17/matcha_home.png)
 
 ## Install
 
